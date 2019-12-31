@@ -1,34 +1,41 @@
 {
-    "name": "zendframework/zendoauth",
+    "name": "laminas/laminas-oauth",
     "description": " ",
-    "type": "library",
     "license": "BSD-3-Clause",
     "keywords": [
-        "zf2",
+        "laminas",
         "oauth"
     ],
-    "minimum-stability": "dev",
-    "homepage": "http://packages.zendframework.com/",
-    "autoload": {
-        "psr-0": {
-            "ZendOAuth": "library/"
-        }
+    "homepage": "https://laminas.dev",
+    "support": {
+        "docs": "https://docs.laminas.dev/laminas-oauth/",
+        "issues": "https://github.com/laminas/laminas-oauth/issues",
+        "source": "https://github.com/laminas/laminas-oauth",
+        "rss": "https://github.com/laminas/laminas-oauth/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.zendframework.com/"
-        }
-    ],
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-config": ">=2.0.0rc4",
-        "zendframework/zend-crypt": ">=2.0.0rc4",
-        "zendframework/zend-loader": ">=2.0.0rc4",
-        "zendframework/zend-http": ">=2.0.0rc4",
-        "zendframework/zend-i18n": ">=2.0.0rc4",
-        "zendframework/zend-math": ">=2.0.0rc4",
-        "zendframework/zend-stdlib": ">=2.0.0rc4",
-        "zendframework/zend-uri": ">=2.0.0rc4"
+        "laminas/laminas-config": ">=2.0.0rc4",
+        "laminas/laminas-crypt": ">=2.0.0rc4",
+        "laminas/laminas-http": ">=2.0.0rc4",
+        "laminas/laminas-i18n": ">=2.0.0rc4",
+        "laminas/laminas-loader": ">=2.0.0rc4",
+        "laminas/laminas-math": ">=2.0.0rc4",
+        "laminas/laminas-stdlib": ">=2.0.0rc4",
+        "laminas/laminas-uri": ">=2.0.0rc4",
+        "laminas/laminas-zendframework-bridge": "^1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Laminas\\OAuth\\": "library/"
+        }
+    },
+    "replace": {
+        "zendframework/zendoauth": "self.version"
     }
 }
