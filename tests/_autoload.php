@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Setup autoloading
  */
@@ -21,11 +22,11 @@ After that, you should be able to run tests.');
 
 
 spl_autoload_register(function ($class) {
-    if (0 !== strpos($class, 'ZendOAuthTest\\')) {
+    if (0 !== strpos($class, 'LaminasTest\\OAuth\\')) {
         return false;
     }
-    $normalized = str_replace('ZendOAuthTest\\', '', $class);
-    $filename   = __DIR__ . '/ZendOAuth/' . str_replace(array('\\', '_'), '/', $normalized) . '.php';
+    $normalized = str_replace('LaminasTest\\OAuth\\', '', $class);
+    $filename   = __DIR__ . '/Laminas/OAuth/' . str_replace(array('\\', '_'), '/', $normalized) . '.php';
     if (!file_exists($filename)) {
         return false;
     }
