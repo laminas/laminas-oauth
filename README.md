@@ -1,4 +1,4 @@
-ZendOAuth component
+laminas-oauth component
 
 You can install using:
 
