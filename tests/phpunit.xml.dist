@@ -1,7 +1,7 @@
 <phpunit bootstrap="./Bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="ZendOAuth Test Suite">
-            <directory>./ZendOAuth</directory>
+        <testsuite name="laminas-oauth Test Suite">
+            <directory>./Laminas/OAuth</directory>
         </testsuite>
     </testsuites>
 
