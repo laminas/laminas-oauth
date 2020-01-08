@@ -8,7 +8,6 @@
     ],
     "homepage": "https://laminas.dev",
     "support": {
-        "docs": "https://docs.laminas.dev/laminas-oauth/",
         "issues": "https://github.com/laminas/laminas-oauth/issues",
         "source": "https://github.com/laminas/laminas-oauth",
         "rss": "https://github.com/laminas/laminas-oauth/releases.atom",
