@@ -40,6 +40,6 @@
         }
     },
     "replace": {
-        "zendframework/zendoauth": "self.version"
+        "zendframework/zendoauth": "^2.0.3"
     }
 }
