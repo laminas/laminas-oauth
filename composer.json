@@ -34,10 +34,16 @@
         "laminas/laminas-uri": ">=2.0.0",
         "laminas/laminas-zendframework-bridge": "^1.0"
     },
+    "require-dev": {
+        "vimeo/psalm": "^3.18"
+    },
     "autoload": {
         "psr-0": {
             "Laminas\\OAuth\\": "library/"
         }
+    },
+    "scripts": {
+        "static-analysis": "psalm --shepherd --stats"
     },
     "replace": {
         "zendframework/zendoauth": "^2.0.3"
