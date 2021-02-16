@@ -19,14 +19,14 @@ class AccessTokenTest extends TestCase
 {
     protected $stubConsumer = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->stubConsumer = new Consumer39745();
         $this->stubHttpUtility = new HTTPUtility39745();
         OAuth::setHttpClient(new HTTPClient39745());
     }
 
-    public function teardown()
+    public function teardown(): void
     {
         OAuth::clearHttpClient();
     }

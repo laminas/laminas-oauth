@@ -20,7 +20,7 @@ class RequestTokenTest extends TestCase
 {
     protected $stubConsumer = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->stubConsumer = new Consumer32874();
         $this->stubConsumer2 = new Consumer32874b();
@@ -28,7 +28,7 @@ class RequestTokenTest extends TestCase
         OAuth::setHttpClient(new HTTPClient32874());
     }
 
-    public function teardown()
+    public function teardown(): void
     {
         OAuth::clearHttpClient();
     }
