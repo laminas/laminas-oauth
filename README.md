@@ -1,11 +1,7 @@
-laminas-oauth component
+# laminas-oauth
 
-You can install using:
+[![Build Status](https://github.com/laminas/laminas-oauth/workflows/Continuous%20Integration/badge.svg)](https://github.com/laminas/laminas-oauth/actions?query=workflow%3A"Continuous+Integration")
 
-```
-curl -s https://getcomposer.org/installer | php
-php composer.phar install
-```
+laminas-oauth provides the ability to authenticate via OAuth1 providers.
 
-At that point, follow the instructions in the documentation folder for actual
-usage of the component. (Documentation is forthcoming.)
+- File issues at https://github.com/laminas/laminas-oauth/issues
