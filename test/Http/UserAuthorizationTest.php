@@ -16,7 +16,7 @@ class UserAuthorizationTest extends TestCase
 {
     protected $stubConsumer = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->stubConsumer = new Consumer34879();
     }

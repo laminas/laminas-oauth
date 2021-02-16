@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class OAuthTest extends TestCase
 {
-    public function teardown()
+    public function teardown(): void
     {
         OAuth::clearHttpClient();
     }
