@@ -31,8 +31,7 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
-        "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.20",
-        "vimeo/psalm": "^3.18"
+        "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.20"
     },
     "autoload": {
         "psr-4": {
