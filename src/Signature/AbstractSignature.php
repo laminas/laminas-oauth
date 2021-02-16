@@ -22,25 +22,25 @@ abstract class AbstractSignature implements SignatureInterface
      * Hash algorithm to use when generating signature
      * @var string
      */
-    protected $_hashAlgorithm = null;
+    protected $hashAlgorithm = null;
 
     /**
      * Key to use when signing
      * @var string
      */
-    protected $_key = null;
+    protected $key = null;
 
     /**
      * Consumer secret
      * @var string
      */
-    protected $_consumerSecret = null;
+    protected $consumerSecret = null;
 
     /**
      * Token secret
      * @var string
      */
-    protected $_tokenSecret = '';
+    protected $tokenSecret = '';
 
     /**
      * Constructor
@@ -52,13 +52,13 @@ abstract class AbstractSignature implements SignatureInterface
      */
     public function __construct($consumerSecret, $tokenSecret = null, $hashAlgo = null)
     {
-        $this->_consumerSecret = $consumerSecret;
+        $this->consumerSecret = $consumerSecret;
         if (isset($tokenSecret)) {
-            $this->_tokenSecret = $tokenSecret;
+            $this->tokenSecret = $tokenSecret;
         }
-        $this->_key = $this->_assembleKey();
+        $this->key = $this->assembleKey();
         if (isset($hashAlgo)) {
-            $this->_hashAlgorithm = $hashAlgo;
+            $this->hashAlgorithm = $hashAlgo;
         }
     }
 
@@ -77,7 +77,7 @@ abstract class AbstractSignature implements SignatureInterface
             $uri->setPort('');
         } elseif ($uri->getScheme() == 'https' && $uri->getPort() == '443') {
             $uri->setPort('');
-        } elseif (!in_array($uri->getScheme(), array('http', 'https'))) {
+        } elseif (! in_array($uri->getScheme(), ['http', 'https'])) {
             throw new Exception\InvalidArgumentException('Invalid URL provided; must be an HTTP or HTTPS scheme');
         }
         $uri->setQuery('');
@@ -90,11 +90,11 @@ abstract class AbstractSignature implements SignatureInterface
      *
      * @return string
      */
-    protected function _assembleKey()
+    protected function assembleKey()
     {
-        $parts = array($this->_consumerSecret);
-        if ($this->_tokenSecret !== null) {
-            $parts[] = $this->_tokenSecret;
+        $parts = [$this->consumerSecret];
+        if ($this->tokenSecret !== null) {
+            $parts[] = $this->tokenSecret;
         }
         foreach ($parts as $key => $secret) {
             $parts[$key] = HTTPUtility::urlEncode($secret);
@@ -110,14 +110,14 @@ abstract class AbstractSignature implements SignatureInterface
      * @param  null|string $url
      * @return string
      */
-    protected function _getBaseSignatureString(array $params, $method = null, $url = null)
+    protected function getBaseSignatureString(array $params, $method = null, $url = null)
     {
-        $encodedParams = array();
+        $encodedParams = [];
         foreach ($params as $key => $value) {
             $encodedParams[HTTPUtility::urlEncode($key)] =
                 HTTPUtility::urlEncode($value);
         }
-        $baseStrings = array();
+        $baseStrings = [];
         if (isset($method)) {
             $baseStrings[] = strtoupper($method);
         }
@@ -131,7 +131,7 @@ abstract class AbstractSignature implements SignatureInterface
             unset($encodedParams['oauth_signature']);
         }
         $baseStrings[] = HTTPUtility::urlEncode(
-            $this->_toByteValueOrderedQueryString($encodedParams)
+            $this->toByteValueOrderedQueryString($encodedParams)
         );
         return implode('&', $baseStrings);
     }
@@ -142,9 +142,9 @@ abstract class AbstractSignature implements SignatureInterface
      * @param  array $params
      * @return string
      */
-    protected function _toByteValueOrderedQueryString(array $params)
+    protected function toByteValueOrderedQueryString(array $params)
     {
-        $return = array();
+        $return = [];
         uksort($params, 'strnatcmp');
         foreach ($params as $key => $value) {
             if (is_array($value)) {

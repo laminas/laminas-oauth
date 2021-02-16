@@ -24,7 +24,7 @@ class AccessToken extends HTTPClient
      *
      * @var \Laminas\Http\Client
      */
-    protected $_httpClient = null;
+    protected $httpClient = null;
 
     /**
      * Initiate a HTTP request to retrieve an Access Token.
@@ -46,26 +46,26 @@ class AccessToken extends HTTPClient
      */
     public function assembleParams()
     {
-        $params = array(
-            'oauth_consumer_key'     => $this->_consumer->getConsumerKey(),
-            'oauth_nonce'            => $this->_httpUtility->generateNonce(),
-            'oauth_signature_method' => $this->_consumer->getSignatureMethod(),
-            'oauth_timestamp'        => $this->_httpUtility->generateTimestamp(),
-            'oauth_token'            => $this->_consumer->getLastRequestToken()->getToken(),
-            'oauth_version'          => $this->_consumer->getVersion(),
-        );
+        $params = [
+            'oauth_consumer_key'     => $this->consumer->getConsumerKey(),
+            'oauth_nonce'            => $this->httpUtility->generateNonce(),
+            'oauth_signature_method' => $this->consumer->getSignatureMethod(),
+            'oauth_timestamp'        => $this->httpUtility->generateTimestamp(),
+            'oauth_token'            => $this->consumer->getLastRequestToken()->getToken(),
+            'oauth_version'          => $this->consumer->getVersion(),
+        ];
 
-        if (!empty($this->_parameters)) {
-            $params = array_merge($params, $this->_parameters);
+        if (! empty($this->parameters)) {
+            $params = array_merge($params, $this->parameters);
         }
 
-        $params['oauth_signature'] = $this->_httpUtility->sign(
+        $params['oauth_signature'] = $this->httpUtility->sign(
             $params,
-            $this->_consumer->getSignatureMethod(),
-            $this->_consumer->getConsumerSecret(),
-            $this->_consumer->getLastRequestToken()->getTokenSecret(),
-            $this->_preferredRequestMethod,
-            $this->_consumer->getAccessTokenUrl()
+            $this->consumer->getSignatureMethod(),
+            $this->consumer->getConsumerSecret(),
+            $this->consumer->getLastRequestToken()->getTokenSecret(),
+            $this->preferredRequestMethod,
+            $this->consumer->getAccessTokenUrl()
         );
 
         return $params;
@@ -80,13 +80,13 @@ class AccessToken extends HTTPClient
      */
     public function getRequestSchemeHeaderClient(array $params)
     {
-        $params      = $this->_cleanParamsOfIllegalCustomParameters($params);
-        $headerValue = $this->_toAuthorizationHeader($params);
+        $params      = $this->cleanParamsOfIllegalCustomParameters($params);
+        $headerValue = $this->toAuthorizationHeader($params);
         $client      = OAuth::getHttpClient();
 
-        $client->setUri($this->_consumer->getAccessTokenUrl());
-        $client->setHeaders(array('Authorization' =>  $headerValue));
-        $client->setMethod($this->_preferredRequestMethod);
+        $client->setUri($this->consumer->getAccessTokenUrl());
+        $client->setHeaders(['Authorization' => $headerValue]);
+        $client->setMethod($this->preferredRequestMethod);
 
         return $client;
     }
@@ -100,14 +100,14 @@ class AccessToken extends HTTPClient
      */
     public function getRequestSchemePostBodyClient(array $params)
     {
-        $params = $this->_cleanParamsOfIllegalCustomParameters($params);
+        $params = $this->cleanParamsOfIllegalCustomParameters($params);
         $client = OAuth::getHttpClient();
-        $client->setUri($this->_consumer->getAccessTokenUrl());
-        $client->setMethod($this->_preferredRequestMethod);
+        $client->setUri($this->consumer->getAccessTokenUrl());
+        $client->setMethod($this->preferredRequestMethod);
         $client->setRawBody(
-            $this->_httpUtility->toEncodedQueryString($params)
+            $this->httpUtility->toEncodedQueryString($params)
         );
-        $client->setHeaders(array('Content-Type' => Http\Client::ENC_URLENCODED));
+        $client->setHeaders(['Content-Type' => Http\Client::ENC_URLENCODED]);
         return $client;
     }
 
@@ -121,7 +121,7 @@ class AccessToken extends HTTPClient
      */
     public function getRequestSchemeQueryStringClient(array $params, $url)
     {
-        $params = $this->_cleanParamsOfIllegalCustomParameters($params);
+        $params = $this->cleanParamsOfIllegalCustomParameters($params);
         return parent::getRequestSchemeQueryStringClient($params, $url);
     }
 
@@ -136,10 +136,10 @@ class AccessToken extends HTTPClient
      * @param  array $params
      * @return array
      */
-    protected function _cleanParamsOfIllegalCustomParameters(array $params)
+    protected function cleanParamsOfIllegalCustomParameters(array $params)
     {
-        foreach ($params as $key=>$value) {
-            if (!preg_match("/^oauth_/", $key)) {
+        foreach ($params as $key => $value) {
+            if (! preg_match("/^oauth_/", $key)) {
                 unset($params[$key]);
             }
         }

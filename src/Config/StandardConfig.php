@@ -8,7 +8,6 @@
 
 namespace Laminas\OAuth\Config;
 
-use Laminas\OAuth\Config as OAuthConfig;
 use Laminas\OAuth\Exception;
 use Laminas\OAuth\OAuth;
 use Laminas\OAuth\Token\TokenInterface;
@@ -27,7 +26,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_signatureMethod = 'HMAC-SHA1';
+    protected $signatureMethod = 'HMAC-SHA1';
 
     /**
      * Three request schemes are defined by OAuth, of which passing
@@ -36,7 +35,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_requestScheme = OAuth::REQUEST_SCHEME_HEADER;
+    protected $requestScheme = OAuth::REQUEST_SCHEME_HEADER;
 
     /**
      * Preferred request Method - one of GET or POST - which Laminas_OAuth
@@ -45,14 +44,14 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_requestMethod = OAuth::POST;
+    protected $requestMethod = OAuth::POST;
 
     /**
      * OAuth Version; This defaults to 1.0 - Must not be changed!
      *
      * @var string
      */
-    protected $_version = '1.0';
+    protected $version = '1.0';
 
     /**
      * This optional value is used to define where the user is redirected to
@@ -62,14 +61,14 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_callbackUrl = null;
+    protected $callbackUrl = null;
 
     /**
      * The URL root to append default OAuth endpoint paths.
      *
      * @var string
      */
-    protected $_siteUrl = null;
+    protected $siteUrl = null;
 
     /**
      * The URL to which requests for a Request Token should be directed.
@@ -77,7 +76,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_requestTokenUrl = null;
+    protected $requestTokenUrl = null;
 
     /**
      * The URL to which requests for an Access Token should be directed.
@@ -85,7 +84,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_accessTokenUrl = null;
+    protected $accessTokenUrl = null;
 
     /**
      * The URL to which users should be redirected to authorize a Request Token.
@@ -93,21 +92,21 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $_authorizeUrl = null;
+    protected $authorizeUrl = null;
 
     /**
      * An OAuth application's Consumer Key.
      *
      * @var string
      */
-    protected $_consumerKey = null;
+    protected $consumerKey = null;
 
     /**
      * Every Consumer Key has a Consumer Secret unless you're in RSA-land.
      *
      * @var string
      */
-    protected $_consumerSecret = null;
+    protected $consumerSecret = null;
 
     /**
      * If relevant, a PEM encoded RSA private key encapsulated as a
@@ -115,7 +114,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var \Laminas\Crypt\PublicKey\Rsa\PrivateKey
      */
-    protected $_rsaPrivateKey = null;
+    protected $rsaPrivateKey = null;
 
     /**
      * If relevant, a PEM encoded RSA public key encapsulated as a
@@ -123,7 +122,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var \Laminas\Crypt\PublicKey\Rsa\PublicKey
      */
-    protected $_rsaPublicKey = null;
+    protected $rsaPublicKey = null;
 
     /**
      * Generally this will nearly always be an Access Token represented as a
@@ -131,7 +130,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var \Laminas\OAuth\Token\TokenInterface
      */
-    protected $_token = null;
+    protected $token = null;
 
     /**
      * Constructor; create a new object with an optional array|Traversable
@@ -222,7 +221,7 @@ class StandardConfig implements ConfigInterface
      */
     public function setConsumerKey($key)
     {
-        $this->_consumerKey = $key;
+        $this->consumerKey = $key;
         return $this;
     }
 
@@ -233,7 +232,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getConsumerKey()
     {
-        return $this->_consumerKey;
+        return $this->consumerKey;
     }
 
     /**
@@ -244,7 +243,7 @@ class StandardConfig implements ConfigInterface
      */
     public function setConsumerSecret($secret)
     {
-        $this->_consumerSecret = $secret;
+        $this->consumerSecret = $secret;
         return $this;
     }
 
@@ -258,10 +257,10 @@ class StandardConfig implements ConfigInterface
      */
     public function getConsumerSecret()
     {
-        if ($this->_rsaPrivateKey !== null) {
-            return $this->_rsaPrivateKey;
+        if ($this->rsaPrivateKey !== null) {
+            return $this->rsaPrivateKey;
         }
-        return $this->_consumerSecret;
+        return $this->consumerSecret;
     }
 
     /**
@@ -274,15 +273,15 @@ class StandardConfig implements ConfigInterface
     public function setSignatureMethod($method)
     {
         $method = strtoupper($method);
-        if (!in_array($method, array(
+        if (! in_array($method, [
                 'HMAC-SHA1', 'HMAC-SHA256', 'RSA-SHA1', 'PLAINTEXT'
-            ))
+            ])
         ) {
             throw new Exception\InvalidArgumentException('Unsupported signature method: '
                 . $method
                 . '. Supported are HMAC-SHA1, RSA-SHA1, PLAINTEXT and HMAC-SHA256');
         }
-        $this->_signatureMethod = $method;
+        $this->signatureMethod = $method;
         return $this;
     }
 
@@ -293,7 +292,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getSignatureMethod()
     {
-        return $this->_signatureMethod;
+        return $this->signatureMethod;
     }
 
     /**
@@ -301,16 +300,17 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $scheme
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException if invalid scheme specified, or if POSTBODY set when request method of GET is specified
+     * @throws Exception\InvalidArgumentException if invalid scheme specified,
+     *     or if POSTBODY set when request method of GET is specified
      */
     public function setRequestScheme($scheme)
     {
         $scheme = strtolower($scheme);
-        if (!in_array($scheme, array(
+        if (! in_array($scheme, [
                 OAuth::REQUEST_SCHEME_HEADER,
                 OAuth::REQUEST_SCHEME_POSTBODY,
                 OAuth::REQUEST_SCHEME_QUERYSTRING,
-            ))
+            ])
         ) {
             throw new Exception\InvalidArgumentException(
                 '\'' . $scheme . '\' is an unsupported request scheme'
@@ -323,7 +323,7 @@ class StandardConfig implements ConfigInterface
                 'Cannot set POSTBODY request method if HTTP method set to GET'
             );
         }
-        $this->_requestScheme = $scheme;
+        $this->requestScheme = $scheme;
         return $this;
     }
 
@@ -334,7 +334,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getRequestScheme()
     {
-        return $this->_requestScheme;
+        return $this->requestScheme;
     }
 
     /**
@@ -345,7 +345,7 @@ class StandardConfig implements ConfigInterface
      */
     public function setVersion($version)
     {
-        $this->_version = $version;
+        $this->version = $version;
         return $this;
     }
 
@@ -356,7 +356,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getVersion()
     {
-        return $this->_version;
+        return $this->version;
     }
 
     /**
@@ -369,9 +369,9 @@ class StandardConfig implements ConfigInterface
     public function setCallbackUrl($url)
     {
         if ($url !== 'oob') {
-            $this->_validateUrl($url);
+            $this->validateUrl($url);
         }
-        $this->_callbackUrl = $url;
+        $this->callbackUrl = $url;
         return $this;
     }
 
@@ -382,7 +382,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getCallbackUrl()
     {
-        return $this->_callbackUrl;
+        return $this->callbackUrl;
     }
 
     /**
@@ -394,8 +394,8 @@ class StandardConfig implements ConfigInterface
      */
     public function setSiteUrl($url)
     {
-        $this->_validateUrl($url);
-        $this->_siteUrl = $url;
+        $this->validateUrl($url);
+        $this->siteUrl = $url;
         return $this;
     }
 
@@ -406,7 +406,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getSiteUrl()
     {
-        return $this->_siteUrl;
+        return $this->siteUrl;
     }
 
     /**
@@ -418,8 +418,8 @@ class StandardConfig implements ConfigInterface
      */
     public function setRequestTokenUrl($url)
     {
-        $this->_validateUrl($url);
-        $this->_requestTokenUrl = rtrim($url, '/');
+        $this->validateUrl($url);
+        $this->requestTokenUrl = rtrim($url, '/');
         return $this;
     }
 
@@ -433,10 +433,10 @@ class StandardConfig implements ConfigInterface
      */
     public function getRequestTokenUrl()
     {
-        if (!$this->_requestTokenUrl && $this->_siteUrl) {
-            return rtrim($this->_siteUrl, '/') . '/request_token';
+        if (! $this->requestTokenUrl && $this->siteUrl) {
+            return rtrim($this->siteUrl, '/') . '/request_token';
         }
-        return $this->_requestTokenUrl;
+        return $this->requestTokenUrl;
     }
 
     /**
@@ -448,8 +448,8 @@ class StandardConfig implements ConfigInterface
      */
     public function setAccessTokenUrl($url)
     {
-        $this->_validateUrl($url);
-        $this->_accessTokenUrl = rtrim($url, '/');
+        $this->validateUrl($url);
+        $this->accessTokenUrl = rtrim($url, '/');
         return $this;
     }
 
@@ -463,10 +463,10 @@ class StandardConfig implements ConfigInterface
      */
     public function getAccessTokenUrl()
     {
-        if (!$this->_accessTokenUrl && $this->_siteUrl) {
-            return rtrim($this->_siteUrl, '/') . '/access_token';
+        if (! $this->accessTokenUrl && $this->siteUrl) {
+            return rtrim($this->siteUrl, '/') . '/access_token';
         }
-        return $this->_accessTokenUrl;
+        return $this->accessTokenUrl;
     }
 
     /**
@@ -490,8 +490,8 @@ class StandardConfig implements ConfigInterface
      */
     public function setAuthorizeUrl($url)
     {
-        $this->_validateUrl($url);
-        $this->_authorizeUrl = rtrim($url, '/');
+        $this->validateUrl($url);
+        $this->authorizeUrl = rtrim($url, '/');
         return $this;
     }
 
@@ -515,10 +515,10 @@ class StandardConfig implements ConfigInterface
      */
     public function getAuthorizeUrl()
     {
-        if (!$this->_authorizeUrl && $this->_siteUrl) {
-            return rtrim($this->_siteUrl, '/') . '/authorize';
+        if (! $this->authorizeUrl && $this->siteUrl) {
+            return rtrim($this->siteUrl, '/') . '/authorize';
         }
-        return $this->_authorizeUrl;
+        return $this->authorizeUrl;
     }
 
     /**
@@ -531,16 +531,16 @@ class StandardConfig implements ConfigInterface
     public function setRequestMethod($method)
     {
         $method = strtoupper($method);
-        if (!in_array($method, array(
+        if (! in_array($method, [
                 OAuth::GET,
                 OAuth::POST,
                 OAuth::PUT,
                 OAuth::DELETE,
-            ))
+            ])
         ) {
             throw new Exception\InvalidArgumentException('Invalid method: ' . $method);
         }
-        $this->_requestMethod = $method;
+        $this->requestMethod = $method;
         return $this;
     }
 
@@ -551,7 +551,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getRequestMethod()
     {
-        return $this->_requestMethod;
+        return $this->requestMethod;
     }
 
     /**
@@ -562,7 +562,7 @@ class StandardConfig implements ConfigInterface
      */
     public function setRsaPublicKey(\Laminas\Crypt\PublicKey\Rsa\PublicKey $key)
     {
-        $this->_rsaPublicKey = $key;
+        $this->rsaPublicKey = $key;
         return $this;
     }
 
@@ -573,7 +573,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getRsaPublicKey()
     {
-        return $this->_rsaPublicKey;
+        return $this->rsaPublicKey;
     }
 
     /**
@@ -584,7 +584,7 @@ class StandardConfig implements ConfigInterface
      */
     public function setRsaPrivateKey(\Laminas\Crypt\PublicKey\Rsa\PrivateKey $key)
     {
-        $this->_rsaPrivateKey = $key;
+        $this->rsaPrivateKey = $key;
         return $this;
     }
 
@@ -595,7 +595,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getRsaPrivateKey()
     {
-        return $this->_rsaPrivateKey;
+        return $this->rsaPrivateKey;
     }
 
     /**
@@ -606,7 +606,7 @@ class StandardConfig implements ConfigInterface
      */
     public function setToken(TokenInterface $token)
     {
-        $this->_token = $token;
+        $this->token = $token;
         return $this;
     }
 
@@ -617,7 +617,7 @@ class StandardConfig implements ConfigInterface
      */
     public function getToken()
     {
-        return $this->_token;
+        return $this->token;
     }
 
     /**
@@ -627,12 +627,12 @@ class StandardConfig implements ConfigInterface
      * @return void
      * @throws Exception\InvalidArgumentException
      */
-    protected function _validateUrl($url)
+    protected function validateUrl($url)
     {
         $uri = Uri\UriFactory::factory($url);
-        if (!$uri->isValid()) {
+        if (! $uri->isValid()) {
             throw new Exception\InvalidArgumentException(sprintf("'%s' is not a valid URI", $url));
-        } elseif (!in_array($uri->getScheme(), array('http', 'https'))) {
+        } elseif (! in_array($uri->getScheme(), ['http', 'https'])) {
             throw new Exception\InvalidArgumentException(sprintf("'%s' is not a valid URI", $url));
         }
     }

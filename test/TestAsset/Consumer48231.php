@@ -16,8 +16,8 @@ class Consumer48231 extends Consumer
 {
     public function __construct(array $options = [])
     {
-        $this->_requestToken = new Request();
-        $this->_accessToken  = new Access();
+        $this->requestToken = new Request();
+        $this->accessToken  = new Access();
         parent::__construct($options);
     }
 

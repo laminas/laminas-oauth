@@ -13,4 +13,6 @@ namespace Laminas\OAuth\Exception;
  * @package    Laminas_OAuth
  */
 interface ExceptionInterface
-{}
+{
+
+}

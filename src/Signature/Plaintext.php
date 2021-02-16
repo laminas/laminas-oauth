@@ -24,10 +24,10 @@ class Plaintext extends AbstractSignature
      */
     public function sign(array $params, $method = null, $url = null)
     {
-        if ($this->_tokenSecret === null) {
-            return $this->_consumerSecret . '&';
+        if ($this->tokenSecret === null) {
+            return $this->consumerSecret . '&';
         }
-        $return = implode('&', array($this->_consumerSecret, $this->_tokenSecret));
+        $return = implode('&', [$this->consumerSecret, $this->tokenSecret]);
         return $return;
     }
 }

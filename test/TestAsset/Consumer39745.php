@@ -13,7 +13,8 @@ use Laminas\OAuth\Consumer;
 class Consumer39745 extends Consumer
 {
     public function getConsumerKey()
-    {return '1234567890';
+    {
+        return '1234567890';
     }
 
     public function getSignatureMethod()

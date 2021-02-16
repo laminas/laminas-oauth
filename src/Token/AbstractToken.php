@@ -30,19 +30,19 @@ abstract class AbstractToken implements TokenInterface
      *
      * @var array
      */
-    protected $_params = array();
+    protected $params = [];
 
     /**
      * OAuth response object
      *
      * @var \Laminas\Http\Response
      */
-    protected $_response = null;
+    protected $response = null;
 
     /**
      * @var \Laminas\OAuth\Http\Utility
      */
-    protected $_httpUtility = null;
+    protected $httpUtility = null;
 
     /**
      * Constructor; basic setup for any Token subclass.
@@ -56,16 +56,16 @@ abstract class AbstractToken implements TokenInterface
         HTTPUtility $utility = null
     ) {
         if ($response !== null) {
-            $this->_response = $response;
-            $params = $this->_parseParameters($response);
+            $this->response = $response;
+            $params = $this->parseParameters($response);
             if (count($params) > 0) {
                 $this->setParams($params);
             }
         }
         if ($utility !== null) {
-            $this->_httpUtility = $utility;
+            $this->httpUtility = $utility;
         } else {
-            $this->_httpUtility = new HTTPUtility;
+            $this->httpUtility = new HTTPUtility;
         }
     }
 
@@ -77,9 +77,9 @@ abstract class AbstractToken implements TokenInterface
      */
     public function isValid()
     {
-        if (isset($this->_params[self::TOKEN_PARAM_KEY])
-            && !empty($this->_params[self::TOKEN_PARAM_KEY])
-            && isset($this->_params[self::TOKEN_SECRET_PARAM_KEY])
+        if (isset($this->params[self::TOKEN_PARAM_KEY])
+            && ! empty($this->params[self::TOKEN_PARAM_KEY])
+            && isset($this->params[self::TOKEN_SECRET_PARAM_KEY])
         ) {
             return true;
         }
@@ -93,7 +93,7 @@ abstract class AbstractToken implements TokenInterface
      */
     public function getResponse()
     {
-        return $this->_response;
+        return $this->response;
     }
 
     /**
@@ -130,7 +130,7 @@ abstract class AbstractToken implements TokenInterface
      */
     public function setParam($key, $value)
     {
-        $this->_params[$key] = trim($value, "\n");
+        $this->params[$key] = trim($value, "\n");
         return $this;
     }
 
@@ -143,7 +143,7 @@ abstract class AbstractToken implements TokenInterface
      */
     public function setParams(array $params)
     {
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $this->setParam($key, $value);
         }
         return $this;
@@ -157,8 +157,8 @@ abstract class AbstractToken implements TokenInterface
      */
     public function getParam($key)
     {
-        if (isset($this->_params[$key])) {
-            return $this->_params[$key];
+        if (isset($this->params[$key])) {
+            return $this->params[$key];
         }
         return null;
     }
@@ -214,7 +214,7 @@ abstract class AbstractToken implements TokenInterface
      */
     public function toString()
     {
-        return $this->_httpUtility->toEncodedQueryString($this->_params);
+        return $this->httpUtility->toEncodedQueryString($this->params);
     }
 
     /**
@@ -235,7 +235,7 @@ abstract class AbstractToken implements TokenInterface
      * @param  \Laminas\Http\Response $response
      * @return array
      */
-    protected function _parseParameters(HTTPResponse $response)
+    protected function parseParameters(HTTPResponse $response)
     {
         $params = [];
         $body   = $response->getBody();
@@ -257,7 +257,7 @@ abstract class AbstractToken implements TokenInterface
      */
     public function __sleep()
     {
-        return array('_params');
+        return ['_params'];
     }
 
     /**
@@ -265,8 +265,8 @@ abstract class AbstractToken implements TokenInterface
      */
     public function __wakeup()
     {
-        if ($this->_httpUtility === null) {
-            $this->_httpUtility = new HTTPUtility;
+        if ($this->httpUtility === null) {
+            $this->httpUtility = new HTTPUtility;
         }
     }
 }

@@ -39,14 +39,14 @@ class AccessTokenTest extends TestCase
 
     public function testConstructorSetsCustomServiceParameters()
     {
-        $request = new Http\AccessToken($this->stubConsumer, array(1,2,3), $this->stubHttpUtility);
-        $this->assertEquals(array(1,2,3), $request->getParameters());
+        $request = new Http\AccessToken($this->stubConsumer, [1,2,3], $this->stubHttpUtility);
+        $this->assertEquals([1,2,3], $request->getParameters());
     }
 
     public function testAssembleParametersCorrectlyAggregatesOauthParameters()
     {
         $request = new Http\AccessToken($this->stubConsumer, null, $this->stubHttpUtility);
-        $expectedParams = array (
+        $expectedParams = [
             'oauth_consumer_key' => '1234567890',
             'oauth_nonce' => 'e807f1fcf82d132f9bb018ca6738a19f',
             'oauth_signature_method' => 'HMAC-SHA1',
@@ -54,33 +54,33 @@ class AccessTokenTest extends TestCase
             'oauth_token' => '0987654321',
             'oauth_version' => '1.0',
             'oauth_signature' => '6fb42da0e32e07b61c9f0251fe627a9c'
-        );
+        ];
         $this->assertEquals($expectedParams, $request->assembleParams());
     }
     public function testAssembleParametersCorrectlyIgnoresCustomParameters()
     {
-        $request = new Http\AccessToken($this->stubConsumer, array(
-            'custom_param1'=>'foo',
-            'custom_param2'=>'bar'
-        ), $this->stubHttpUtility);
-        $expectedParams = array (
+        $request = new Http\AccessToken($this->stubConsumer, [
+            'custom_param1' => 'foo',
+            'custom_param2' => 'bar'
+        ], $this->stubHttpUtility);
+        $expectedParams = [
             'oauth_consumer_key' => '1234567890',
             'oauth_nonce' => 'e807f1fcf82d132f9bb018ca6738a19f',
             'oauth_signature_method' => 'HMAC-SHA1',
             'oauth_timestamp' => '12345678901',
             'oauth_token' => '0987654321',
             'oauth_version' => '1.0',
-            'custom_param1'=>'foo',
-            'custom_param2'=>'bar',
+            'custom_param1' => 'foo',
+            'custom_param2' => 'bar',
             'oauth_signature' => '6fb42da0e32e07b61c9f0251fe627a9c'
-        );
+        ];
         $this->assertEquals($expectedParams, $request->assembleParams());
     }
 
     public function testGetRequestSchemeHeaderClientSetsCorrectlyEncodedAuthorizationHeader()
     {
         $request = new Http\AccessToken($this->stubConsumer, null, $this->stubHttpUtility);
-        $params = array (
+        $params = [
             'oauth_consumer_key' => '1234567890',
             'oauth_nonce' => 'e807f1fcf82d132f9bb018ca6738a19f',
             'oauth_signature_method' => 'HMAC-SHA1',
@@ -90,13 +90,13 @@ class AccessTokenTest extends TestCase
             'oauth_signature' => '6fb42da0e32e07b61c9f0251fe627a9c~',
             'custom_param1' => 'foo',
             'custom_param2' => 'bar'
-        );
+        ];
         $client = $request->getRequestSchemeHeaderClient($params);
         $this->assertEquals(
-        'OAuth realm="",oauth_consumer_key="1234567890",oauth_nonce="e807f1fcf82d132f9b'
-        .'b018ca6738a19f",oauth_signature_method="HMAC-SHA1",oauth_timestamp="'
-        .'12345678901",oauth_token="0987654321",oauth_version="1.0",oauth_sign'
-        .'ature="6fb42da0e32e07b61c9f0251fe627a9c~"',
+            'OAuth realm="",oauth_consumer_key="1234567890",oauth_nonce="e807f1fcf82d132f9b'
+            .'b018ca6738a19f",oauth_signature_method="HMAC-SHA1",oauth_timestamp="'
+            .'12345678901",oauth_token="0987654321",oauth_version="1.0",oauth_sign'
+            .'ature="6fb42da0e32e07b61c9f0251fe627a9c~"',
             $client->getHeader('Authorization')
         );
     }
@@ -104,7 +104,7 @@ class AccessTokenTest extends TestCase
     public function testGetRequestSchemePostBodyClientSetsCorrectlyEncodedRawData()
     {
         $request = new Http\AccessToken($this->stubConsumer, null, $this->stubHttpUtility);
-        $params = array (
+        $params = [
             'oauth_consumer_key' => '1234567890',
             'oauth_nonce' => 'e807f1fcf82d132f9bb018ca6738a19f',
             'oauth_signature_method' => 'HMAC-SHA1',
@@ -114,7 +114,7 @@ class AccessTokenTest extends TestCase
             'oauth_signature' => '6fb42da0e32e07b61c9f0251fe627a9c~',
             'custom_param1' => 'foo',
             'custom_param2' => 'bar'
-        );
+        ];
         $client = $request->getRequestSchemePostBodyClient($params);
         $this->assertEquals(
             'oauth_consumer_key=1234567890&oauth_nonce=e807f1fcf82d132f9bb018c'
@@ -129,7 +129,7 @@ class AccessTokenTest extends TestCase
     public function testGetRequestSchemeQueryStringClientSetsCorrectlyEncodedQueryString()
     {
         $request = new Http\AccessToken($this->stubConsumer, null, $this->stubHttpUtility);
-        $params = array (
+        $params = [
             'oauth_consumer_key' => '1234567890',
             'oauth_nonce' => 'e807f1fcf82d132f9bb018ca6738a19f',
             'oauth_signature_method' => 'HMAC-SHA1',
@@ -139,7 +139,7 @@ class AccessTokenTest extends TestCase
             'oauth_signature' => '6fb42da0e32e07b61c9f0251fe627a9c',
             'custom_param1' => 'foo',
             'custom_param2' => 'bar'
-        );
+        ];
         $client = $request->getRequestSchemeQueryStringClient($params, 'http://www.example.com');
         $this->assertEquals(
             'oauth_consumer_key=1234567890&oauth_nonce=e807f1fcf82d132f9bb018c'

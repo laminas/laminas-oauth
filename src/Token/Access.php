@@ -30,18 +30,21 @@ class Access extends AbstractToken
      * @throws Exception\InvalidArgumentException
      */
     public function toHeader(
-        $url, Config $config, array $customParams = null, $realm = null
+        $url,
+        Config $config,
+        array $customParams = null,
+        $realm = null
     ) {
         $uri = Uri\UriFactory::factory($url);
-        if (!$uri->isValid()
-            || !in_array($uri->getScheme(), array('http', 'https'))
+        if (! $uri->isValid()
+            || ! in_array($uri->getScheme(), ['http', 'https'])
         ) {
             throw new Exception\InvalidArgumentException(
                 '\'' . $url . '\' is not a valid URI'
             );
         }
-        $params = $this->_httpUtility->assembleParams($url, $config, $customParams);
-        return $this->_httpUtility->toAuthorizationHeader($params, $realm);
+        $params = $this->httpUtility->assembleParams($url, $config, $customParams);
+        return $this->httpUtility->toAuthorizationHeader($params, $realm);
     }
 
     /**
@@ -56,15 +59,15 @@ class Access extends AbstractToken
     public function toQueryString($url, Config $config, array $params = null)
     {
         $uri = Uri\UriFactory::factory($url);
-        if (!$uri->isValid()
-            || !in_array($uri->getScheme(), array('http', 'https'))
+        if (! $uri->isValid()
+            || ! in_array($uri->getScheme(), ['http', 'https'])
         ) {
             throw new Exception\InvalidArgumentException(
                 '\'' . $url . '\' is not a valid URI'
             );
         }
-        $params = $this->_httpUtility->assembleParams($url, $config, $params);
-        return $this->_httpUtility->toEncodedQueryString($params);
+        $params = $this->httpUtility->assembleParams($url, $config, $params);
+        return $this->httpUtility->toEncodedQueryString($params);
     }
 
     /**
@@ -76,8 +79,12 @@ class Access extends AbstractToken
      * @param  bool $excludeCustomParamsFromHeader
      * @return Client
      */
-    public function getHttpClient(array $oauthOptions, $uri = null, $config = null, $excludeCustomParamsFromHeader = true)
-    {
+    public function getHttpClient(
+        array $oauthOptions,
+        $uri = null,
+        $config = null,
+        $excludeCustomParamsFromHeader = true
+    ) {
         $client = new Client($oauthOptions, $uri, $config, $excludeCustomParamsFromHeader);
         $client->setToken($this);
         return $client;

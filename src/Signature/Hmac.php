@@ -27,9 +27,9 @@ class Hmac extends AbstractSignature
     public function sign(array $params, $method = null, $url = null)
     {
         $binaryHash = HMACEncryption::compute(
-            $this->_key,
-            $this->_hashAlgorithm,
-            $this->_getBaseSignatureString($params, $method, $url),
+            $this->key,
+            $this->hashAlgorithm,
+            $this->getBaseSignatureString($params, $method, $url),
             HMACEncryption::OUTPUT_BINARY
         );
         return base64_encode($binaryHash);

@@ -34,7 +34,7 @@ class Client extends HttpClient
      *
      * @var Config\StandardConfig
      */
-    protected $_config = null;
+    protected $config = null;
 
     /**
      * True if this request is being made with data supplied by
@@ -42,7 +42,7 @@ class Client extends HttpClient
      *
      * @var bool
      */
-    protected $_streamingRequest = null;
+    protected $streamingRequest = null;
 
     /**
      * Constructor; creates a new HTTP Client instance which itself is
@@ -57,12 +57,12 @@ class Client extends HttpClient
     public function __construct($oauthOptions, $uri = null, $config = null)
     {
         parent::__construct($uri, $config);
-        $this->_config = new Config\StandardConfig;
+        $this->config = new Config\StandardConfig;
         if ($oauthOptions !== null) {
             if ($oauthOptions instanceof Traversable) {
                 $oauthOptions = ArrayUtils::iteratorToArray($oauthOptions);
             }
-            $this->_config->setOptions($oauthOptions);
+            $this->config->setOptions($oauthOptions);
         }
     }
 
@@ -75,7 +75,7 @@ class Client extends HttpClient
      */
     public function setStreamingRequest($value)
     {
-        $this->_streamingRequest = $value;
+        $this->streamingRequest = $value;
     }
 
     /**
@@ -85,7 +85,7 @@ class Client extends HttpClient
      */
     public function getStreamingRequest()
     {
-        if ($this->_streamingRequest) {
+        if ($this->streamingRequest) {
             return true;
         }
         return false;
@@ -97,11 +97,11 @@ class Client extends HttpClient
      * @return string
      * @throws \Laminas\Http\Client\Exception\RuntimeException
      */
-    protected function _prepareBody()
+    protected function prepareBody()
     {
-        if($this->_streamingRequest) {
-            $this->setHeaders(array('Content-Length' =>
-                $this->raw_post_data->getTotalSize()));
+        if ($this->streamingRequest) {
+            $this->setHeaders(['Content-Length' =>
+                $this->raw_post_data->getTotalSize()]);
             return $this->raw_post_data;
         }
         return parent::prepareBody();
@@ -114,7 +114,7 @@ class Client extends HttpClient
      */
     public function resetParameters($clearAll = false)
     {
-        $this->_streamingRequest = false;
+        $this->streamingRequest = false;
         return parent::resetParameters($clearAll);
     }
 
@@ -131,7 +131,7 @@ class Client extends HttpClient
      */
     public function setRawDataStream($data, $enctype = null)
     {
-        $this->_streamingRequest = true;
+        $this->streamingRequest = true;
         $this->setEncType($enctype);
         return $this->setRawBody($data);
     }
@@ -148,13 +148,13 @@ class Client extends HttpClient
     {
         if ($method == HttpRequest::METHOD_GET) {
             $this->setRequestMethod(HttpRequest::METHOD_GET);
-        } elseif($method == HttpRequest::METHOD_POST) {
+        } elseif ($method == HttpRequest::METHOD_POST) {
             $this->setRequestMethod(HttpRequest::METHOD_POST);
-        } elseif($method == HttpRequest::METHOD_PUT) {
+        } elseif ($method == HttpRequest::METHOD_PUT) {
             $this->setRequestMethod(HttpRequest::METHOD_PUT);
-        }  elseif($method == HttpRequest::METHOD_DELETE) {
+        } elseif ($method == HttpRequest::METHOD_DELETE) {
             $this->setRequestMethod(HttpRequest::METHOD_DELETE);
-        }   elseif($method == HttpRequest::METHOD_HEAD) {
+        } elseif ($method == HttpRequest::METHOD_HEAD) {
             $this->setRequestMethod(HttpRequest::METHOD_HEAD);
         }
         return parent::setMethod($method);
@@ -182,7 +182,9 @@ class Client extends HttpClient
      * being used.
      *
      * @return void
-     * @throws \Laminas\OAuth\Exception\RuntimeException If POSTBODY scheme requested, but GET request method used; or if invalid request scheme provided
+     * @throws \Laminas\OAuth\Exception\RuntimeException If POSTBODY scheme
+     *     requested, but GET request method used; or if invalid request scheme
+     *     provided
      */
     public function prepareOAuth()
     {
@@ -191,11 +193,11 @@ class Client extends HttpClient
             case OAuth::REQUEST_SCHEME_HEADER:
                 $oauthHeaderValue = $this->getToken()->toHeader(
                     $this->getRequest()->getUriString(),
-                    $this->_config,
-                    $this->_getSignableParameters()
+                    $this->config,
+                    $this->getSignableParameters()
                 );
                 $requestHeaders = $this->getRequest()->getHeaders();
-                $requestHeaders->addHeaders(array('Authorization' => $oauthHeaderValue));
+                $requestHeaders->addHeaders(['Authorization' => $oauthHeaderValue]);
                 break;
             case OAuth::REQUEST_SCHEME_POSTBODY:
                 if ($this->getRequestMethod() == HttpRequest::METHOD_GET) {
@@ -207,8 +209,8 @@ class Client extends HttpClient
                 }
                 $query  = $this->getToken()->toQueryString(
                     $this->getRequest()->getUriString(),
-                    $this->_config,
-                    $this->_getSignableParameters()
+                    $this->config,
+                    $this->getSignableParameters()
                 );
 
                 $this->setRawBody($query);
@@ -216,8 +218,8 @@ class Client extends HttpClient
             case OAuth::REQUEST_SCHEME_QUERYSTRING:
                 $query  = $this->getToken()->toQueryString(
                     $this->getRequest()->getUriString(),
-                    $this->_config,
-                    $this->_getSignableParameters()
+                    $this->config,
+                    $this->getSignableParameters()
                 );
 
                 $this->getUri()->setQuery($query);
@@ -233,7 +235,7 @@ class Client extends HttpClient
      *
      * @return array
      */
-    protected function _getSignableParameters()
+    protected function getSignableParameters()
     {
         $params = [];
         if ($this->getRequest()->getQuery()->count() > 0) {
@@ -259,9 +261,9 @@ class Client extends HttpClient
      */
     public function __call($method, array $args)
     {
-        if (!method_exists($this->_config, $method)) {
+        if (! method_exists($this->config, $method)) {
             throw new Exception\BadMethodCallException('Method does not exist: ' . $method);
         }
-        return call_user_func_array(array($this->_config,$method), $args);
+        return call_user_func_array([$this->config, $method], $args);
     }
 }

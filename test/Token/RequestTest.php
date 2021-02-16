@@ -16,7 +16,7 @@ class RequestTest extends TestCase
 {
     public function testConstructorSetsResponseObject()
     {
-        $response = new HTTPResponse(200, array());
+        $response = new HTTPResponse(200, []);
         $token = new RequestToken($response);
         $this->assertInstanceOf(HTTPResponse::class, $token->getResponse());
     }
@@ -76,7 +76,7 @@ class RequestTest extends TestCase
     public function testIsValidDetectsBadResponse()
     {
         $body = 'oauthtoken=jZaee4GF52O3lUb9&oauthtokensecret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
-        $response = new HTTPResponse(200, array(), $body);
+        $response = new HTTPResponse(200, [], $body);
         $token = new RequestToken($response);
         $this->assertFalse($token->isValid());
     }

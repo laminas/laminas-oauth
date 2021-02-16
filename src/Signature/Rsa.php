@@ -27,12 +27,12 @@ class Rsa extends AbstractSignature
      */
     public function sign(array $params, $method = null, $url = null)
     {
-        $rsa = new RsaEnc(new RsaEncOptions(array(
-            'hash_algorithm' => $this->_hashAlgorithm,
+        $rsa = new RsaEnc(new RsaEncOptions([
+            'hash_algorithm' => $this->hashAlgorithm,
             'binary_output'   => true
-        )));
+        ]));
 
-        return $rsa->sign($this->_getBaseSignatureString($params, $method, $url), $this->_key);
+        return $rsa->sign($this->getBaseSignatureString($params, $method, $url), $this->key);
     }
 
     /**
@@ -40,8 +40,8 @@ class Rsa extends AbstractSignature
      *
      * @return string
      */
-    protected function _assembleKey()
+    protected function assembleKey()
     {
-        return $this->_consumerSecret;
+        return $this->consumerSecret;
     }
 }

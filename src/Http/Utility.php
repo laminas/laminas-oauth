@@ -30,13 +30,13 @@ class Utility
         ConfigInterface $config,
         array $serviceProviderParams = null
     ) {
-        $params = array(
+        $params = [
             'oauth_consumer_key'     => $config->getConsumerKey(),
             'oauth_nonce'            => $this->generateNonce(),
             'oauth_signature_method' => $config->getSignatureMethod(),
             'oauth_timestamp'        => $this->generateTimestamp(),
             'oauth_version'          => $config->getVersion(),
-        );
+        ];
 
         if ($config->getToken()->getToken() != null) {
             $params['oauth_token'] = $config->getToken()->getToken();
@@ -71,13 +71,13 @@ class Utility
     public function toEncodedQueryString(array $params, $customParamsOnly = false)
     {
         if ($customParamsOnly) {
-            foreach ($params as $key=>$value) {
+            foreach ($params as $key => $value) {
                 if (preg_match("/^oauth_/", $key)) {
                     unset($params[$key]);
                 }
             }
         }
-        $encodedParams = array();
+        $encodedParams = [];
         foreach ($params as $key => $value) {
             $encodedParams[] = self::urlEncode($key)
                              . '='
@@ -96,13 +96,13 @@ class Utility
      */
     public function toAuthorizationHeader(array $params, $realm = null, $excludeCustomParams = true)
     {
-        $headerValue = array(
+        $headerValue = [
             'OAuth realm="' . $realm . '"',
-        );
+        ];
 
         foreach ($params as $key => $value) {
             if ($excludeCustomParams) {
-                if (!preg_match("/^oauth_/", $key)) {
+                if (! preg_match("/^oauth_/", $key)) {
                     continue;
                 }
             }
@@ -125,7 +125,12 @@ class Utility
      * @return string
      */
     public function sign(
-        array $params, $signatureMethod, $consumerSecret, $tokenSecret = null, $method = null, $url = null
+        array $params,
+        $signatureMethod,
+        $consumerSecret,
+        $tokenSecret = null,
+        $method = null,
+        $url = null
     ) {
         $className = '';
         $hashAlgo  = null;
@@ -149,9 +154,9 @@ class Utility
      */
     public function parseQueryString($query)
     {
-        $params = array();
+        $params = [];
         if (empty($query)) {
-            return array();
+            return [];
         }
 
         // Not remotely perfect but beats parse_str() which converts

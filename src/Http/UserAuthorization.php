@@ -26,10 +26,10 @@ class UserAuthorization extends HTTPClient
     public function getUrl()
     {
         $params = $this->assembleParams();
-        $uri    = Uri\UriFactory::factory($this->_consumer->getUserAuthorizationUrl());
+        $uri    = Uri\UriFactory::factory($this->consumer->getUserAuthorizationUrl());
 
         $uri->setQuery(
-            $this->_httpUtility->toEncodedQueryString($params)
+            $this->httpUtility->toEncodedQueryString($params)
         );
 
         return $uri->toString();
@@ -42,19 +42,19 @@ class UserAuthorization extends HTTPClient
      */
     public function assembleParams()
     {
-        $params = array(
-            'oauth_token' => $this->_consumer->getLastRequestToken()->getToken(),
-        );
+        $params = [
+            'oauth_token' => $this->consumer->getLastRequestToken()->getToken(),
+        ];
 
-        if (!\Laminas\OAuth\Client::$supportsRevisionA) {
-            $callback = $this->_consumer->getCallbackUrl();
-            if (!empty($callback)) {
+        if (! \Laminas\OAuth\Client::$supportsRevisionA) {
+            $callback = $this->consumer->getCallbackUrl();
+            if (! empty($callback)) {
                 $params['oauth_callback'] = $callback;
             }
         }
 
-        if (!empty($this->_parameters)) {
-            $params = array_merge($params, $this->_parameters);
+        if (! empty($this->parameters)) {
+            $params = array_merge($params, $this->parameters);
         }
 
         return $params;

@@ -24,7 +24,7 @@ class RequestToken extends HTTPClient
      *
      * @var Http\Client
      */
-    protected $_httpClient = null;
+    protected $httpClient = null;
 
     /**
      * Initiate a HTTP request to retrieve a Request Token.
@@ -46,32 +46,32 @@ class RequestToken extends HTTPClient
      */
     public function assembleParams()
     {
-        $params = array(
-            'oauth_consumer_key'     => $this->_consumer->getConsumerKey(),
-            'oauth_nonce'            => $this->_httpUtility->generateNonce(),
-            'oauth_timestamp'        => $this->_httpUtility->generateTimestamp(),
-            'oauth_signature_method' => $this->_consumer->getSignatureMethod(),
-            'oauth_version'          => $this->_consumer->getVersion(),
-        );
+        $params = [
+            'oauth_consumer_key'     => $this->consumer->getConsumerKey(),
+            'oauth_nonce'            => $this->httpUtility->generateNonce(),
+            'oauth_timestamp'        => $this->httpUtility->generateTimestamp(),
+            'oauth_signature_method' => $this->consumer->getSignatureMethod(),
+            'oauth_version'          => $this->consumer->getVersion(),
+        ];
 
         // indicates we support 1.0a
-        if ($this->_consumer->getCallbackUrl()) {
-            $params['oauth_callback'] = $this->_consumer->getCallbackUrl();
+        if ($this->consumer->getCallbackUrl()) {
+            $params['oauth_callback'] = $this->consumer->getCallbackUrl();
         } else {
             $params['oauth_callback'] = 'oob';
         }
 
-        if (!empty($this->_parameters)) {
-            $params = array_merge($params, $this->_parameters);
+        if (! empty($this->parameters)) {
+            $params = array_merge($params, $this->parameters);
         }
 
-        $params['oauth_signature'] = $this->_httpUtility->sign(
+        $params['oauth_signature'] = $this->httpUtility->sign(
             $params,
-            $this->_consumer->getSignatureMethod(),
-            $this->_consumer->getConsumerSecret(),
+            $this->consumer->getSignatureMethod(),
+            $this->consumer->getConsumerSecret(),
             null,
-            $this->_preferredRequestMethod,
-            $this->_consumer->getRequestTokenUrl()
+            $this->preferredRequestMethod,
+            $this->consumer->getRequestTokenUrl()
         );
 
         return $params;
@@ -86,23 +86,23 @@ class RequestToken extends HTTPClient
      */
     public function getRequestSchemeHeaderClient(array $params)
     {
-        $headerValue = $this->_httpUtility->toAuthorizationHeader(
+        $headerValue = $this->httpUtility->toAuthorizationHeader(
             $params
         );
 
         $client = OAuth::getHttpClient();
 
-        $client->setUri($this->_consumer->getRequestTokenUrl());
+        $client->setUri($this->consumer->getRequestTokenUrl());
 
         $request = $client->getRequest();
         $request->getHeaders()
                 ->addHeaderLine('Authorization', $headerValue);
-        $rawdata = $this->_httpUtility->toEncodedQueryString($params, true);
-        if (!empty($rawdata)) {
+        $rawdata = $this->httpUtility->toEncodedQueryString($params, true);
+        if (! empty($rawdata)) {
             $request->setContent($rawdata);
         }
 
-        $client->setMethod($this->_preferredRequestMethod);
+        $client->setMethod($this->preferredRequestMethod);
         return $client;
     }
 
@@ -116,11 +116,11 @@ class RequestToken extends HTTPClient
     public function getRequestSchemePostBodyClient(array $params)
     {
         $client = OAuth::getHttpClient();
-        $client->setUri($this->_consumer->getRequestTokenUrl());
-        $client->setMethod($this->_preferredRequestMethod);
+        $client->setUri($this->consumer->getRequestTokenUrl());
+        $client->setMethod($this->preferredRequestMethod);
         $request = $client->getRequest();
         $request->setContent(
-            $this->_httpUtility->toEncodedQueryString($params)
+            $this->httpUtility->toEncodedQueryString($params)
         );
         $request->getHeaders()
                 ->addHeaderLine('Content-Type', Http\Client::ENC_URLENCODED);

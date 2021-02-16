@@ -20,14 +20,14 @@ class Http
      *
      * @var array
      */
-    protected $_parameters = array();
+    protected $parameters = [];
 
     /**
      * Reference to the Consumer instance in use.
      *
      * @var Consumer
      */
-    protected $_consumer = null;
+    protected $consumer = null;
 
     /**
      * OAuth specifies three request methods, this holds the current preferred
@@ -36,21 +36,21 @@ class Http
      *
      * @var string
      */
-    protected $_preferredRequestScheme = null;
+    protected $preferredRequestScheme = null;
 
     /**
      * Request Method for the HTTP Request.
      *
      * @var string
      */
-    protected $_preferredRequestMethod = OAuth::POST;
+    protected $preferredRequestMethod = OAuth::POST;
 
     /**
      * Instance of the general Laminas\OAuth\Http\Utility class.
      *
      * @var \Laminas\OAuth\Http\Utility
      */
-    protected $_httpUtility = null;
+    protected $httpUtility = null;
 
     /**
      * Constructor
@@ -65,15 +65,15 @@ class Http
         array $parameters = null,
         Http\Utility $utility = null
     ) {
-        $this->_consumer = $consumer;
-        $this->_preferredRequestScheme = $this->_consumer->getRequestScheme();
+        $this->consumer = $consumer;
+        $this->preferredRequestScheme = $this->consumer->getRequestScheme();
         if ($parameters !== null) {
             $this->setParameters($parameters);
         }
         if ($utility !== null) {
-            $this->_httpUtility = $utility;
+            $this->httpUtility = $utility;
         } else {
-            $this->_httpUtility = new Http\Utility;
+            $this->httpUtility = new Http\Utility;
         }
     }
 
@@ -86,10 +86,10 @@ class Http
      */
     public function setMethod($method)
     {
-        if (!in_array($method, array(OAuth::POST, OAuth::GET))) {
+        if (! in_array($method, [OAuth::POST, OAuth::GET])) {
             throw new Exception\InvalidArgumentException('invalid HTTP method: ' . $method);
         }
-        $this->_preferredRequestMethod = $method;
+        $this->preferredRequestMethod = $method;
         return $this;
     }
 
@@ -100,7 +100,7 @@ class Http
      */
     public function getMethod()
     {
-        return $this->_preferredRequestMethod;
+        return $this->preferredRequestMethod;
     }
 
     /**
@@ -111,7 +111,7 @@ class Http
      */
     public function setParameters(array $customServiceParameters)
     {
-        $this->_parameters = $customServiceParameters;
+        $this->parameters = $customServiceParameters;
         return $this;
     }
 
@@ -122,7 +122,7 @@ class Http
      */
     public function getParameters()
     {
-        return $this->_parameters;
+        return $this->parameters;
     }
 
     /**
@@ -132,7 +132,7 @@ class Http
      */
     public function getConsumer()
     {
-        return $this->_consumer;
+        return $this->consumer;
     }
 
     /**
@@ -153,7 +153,7 @@ class Http
         $body     = null;
         $status   = null;
         try {
-            $response = $this->_attemptRequest($params);
+            $response = $this->attemptRequest($params);
         } catch (\Laminas\Http\Client\Exception\ExceptionInterface $e) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Error in HTTP request: %s',
@@ -170,7 +170,7 @@ class Http
             || $status == 401  // Unauthorized
             || empty($body)    // Missing token
         ) {
-            $this->_assessRequestAttempt($response);
+            $this->assessRequestAttempt($response);
             $response = $this->startRequestCycle($params);
         }
         return $response;
@@ -189,9 +189,9 @@ class Http
         $client = OAuth::getHttpClient();
         $client->setUri($url);
         $client->getUri()->setQuery(
-            $this->_httpUtility->toEncodedQueryString($params)
+            $this->httpUtility->toEncodedQueryString($params)
         );
-        $client->setMethod($this->_preferredRequestMethod);
+        $client->setMethod($this->preferredRequestMethod);
         return $client;
     }
 
@@ -203,14 +203,14 @@ class Http
      * @return void
      * @throws Exception\RuntimeException if unable to retrieve valid token response
      */
-    protected function _assessRequestAttempt(\Laminas\Http\Response $response = null)
+    protected function assessRequestAttempt(\Laminas\Http\Response $response = null)
     {
-        switch ($this->_preferredRequestScheme) {
+        switch ($this->preferredRequestScheme) {
             case OAuth::REQUEST_SCHEME_HEADER:
-                $this->_preferredRequestScheme = OAuth::REQUEST_SCHEME_POSTBODY;
+                $this->preferredRequestScheme = OAuth::REQUEST_SCHEME_POSTBODY;
                 break;
             case OAuth::REQUEST_SCHEME_POSTBODY:
-                $this->_preferredRequestScheme = OAuth::REQUEST_SCHEME_QUERYSTRING;
+                $this->preferredRequestScheme = OAuth::REQUEST_SCHEME_QUERYSTRING;
                 break;
             default:
                 throw new Exception\RuntimeException(
@@ -230,12 +230,12 @@ class Http
      * @param  string $realm
      * @return string
      */
-    protected function _toAuthorizationHeader(array $params, $realm = null)
+    protected function toAuthorizationHeader(array $params, $realm = null)
     {
-        $headerValue = array();
+        $headerValue = [];
         $headerValue[] = 'OAuth realm="' . $realm . '"';
         foreach ($params as $key => $value) {
-            if (!preg_match("/^oauth_/", $key)) {
+            if (! preg_match("/^oauth_/", $key)) {
                 continue;
             }
             $headerValue[] = Http\Utility::urlEncode($key)
@@ -253,9 +253,9 @@ class Http
      * @param  array $params
      * @return \Laminas\Http\Response
      */
-    protected function _attemptRequest(array $params)
+    protected function attemptRequest(array $params)
     {
-        switch ($this->_preferredRequestScheme) {
+        switch ($this->preferredRequestScheme) {
             case OAuth::REQUEST_SCHEME_HEADER:
                 $httpClient = $this->getRequestSchemeHeaderClient($params);
                 break;
@@ -263,8 +263,10 @@ class Http
                 $httpClient = $this->getRequestSchemePostBodyClient($params);
                 break;
             case OAuth::REQUEST_SCHEME_QUERYSTRING:
-                $httpClient = $this->getRequestSchemeQueryStringClient($params,
-                    $this->_consumer->getRequestTokenUrl());
+                $httpClient = $this->getRequestSchemeQueryStringClient(
+                    $params,
+                    $this->consumer->getRequestTokenUrl()
+                );
                 break;
         }
 

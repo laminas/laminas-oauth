@@ -33,7 +33,7 @@ class OAuthTest extends TestCase
     public function testGetHttpClientResetsParameters()
     {
         $client = new HTTPClient19485876();
-        $client->setParameterGet(array('key'=>'value'));
+        $client->setParameterGet(['key' => 'value']);
         OAuth::setHttpClient($client);
         $resetClient = OAuth::getHttpClient();
         $resetClient->setUri('http://www.example.com');
@@ -43,7 +43,7 @@ class OAuthTest extends TestCase
     public function testGetHttpClientResetsAuthorizationHeader()
     {
         $client = new HTTPClient19485876();
-        $client->setHeaders(array('Authorization' => 'realm="http://www.example.com",oauth_version="1.0"'));
+        $client->setHeaders(['Authorization' => 'realm="http://www.example.com",oauth_version="1.0"']);
         OAuth::setHttpClient($client);
         $resetClient = OAuth::getHttpClient();
         $this->assertEquals(null, $resetClient->getHeader('Authorization'));
@@ -54,10 +54,10 @@ class OAuthTest extends TestCase
      */
     public function testOauthClientPassingObjectConfigInConstructor()
     {
-        $options = array(
+        $options = [
             'requestMethod' => 'GET',
             'siteUrl'       => 'http://www.example.com'
-        );
+        ];
 
         $config = new Config($options);
         $client = new OAuthClient($config);
@@ -70,10 +70,10 @@ class OAuthTest extends TestCase
      */
     public function testOauthClientPassingArrayInConstructor()
     {
-        $options = array(
+        $options = [
             'requestMethod' => 'GET',
             'siteUrl'       => 'http://www.example.com'
-        );
+        ];
 
         $client = new OAuthClient($options);
         $this->assertEquals('GET', $client->getRequestMethod());
@@ -86,19 +86,26 @@ class OAuthTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['generateTimestamp', 'generateNonce'])
             ->getMock();
-        $mock->expects($this->once())->method('generateTimestamp')->will($this->returnValue('123456789'));
-        $mock->expects($this->once())->method('generateNonce')->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
+        $mock
+            ->expects($this->once())
+            ->method('generateTimestamp')
+            ->will($this->returnValue('123456789'));
+        $mock
+            ->expects($this->once())
+            ->method('generateNonce')
+            ->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
 
         $token = new Token\Access(null, $mock);
         $token->setToken('123')
               ->setTokenSecret('456');
 
-        $client = new OAuthClient(array(
+        $client = new OAuthClient([
             'token' => $token
-        ), 'http://www.example.com');
+        ], 'http://www.example.com');
         $client->getRequest()->getQuery()->set('foo', 'bar');
         $client->prepareOAuth();
 
+        // @codingStandardsIgnoreLine
         $header = 'OAuth realm="",oauth_consumer_key="",oauth_nonce="67648c83ba9a7de429bd1b773fb96091",oauth_signature_method="HMAC-SHA1",oauth_timestamp="123456789",oauth_version="1.0",oauth_token="123",oauth_signature="fzWiYe4gZ2wkEMp9bEzWnlD88KE%3D"';
         $this->assertEquals($header, $client->getHeader('Authorization'));
     }
@@ -109,19 +116,26 @@ class OAuthTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['generateTimestamp', 'generateNonce'])
             ->getMock();
-        $mock->expects($this->once())->method('generateTimestamp')->will($this->returnValue('123456789'));
-        $mock->expects($this->once())->method('generateNonce')->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
+        $mock
+            ->expects($this->once())
+            ->method('generateTimestamp')
+            ->will($this->returnValue('123456789'));
+        $mock
+            ->expects($this->once())
+            ->method('generateNonce')
+            ->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
 
         $token = new Token\Access(null, $mock);
         $token->setToken('123')
               ->setTokenSecret('456');
 
-        $client = new OAuthClient(array(
+        $client = new OAuthClient([
             'token' => $token
-        ), 'http://www.example.com');
+        ], 'http://www.example.com');
         $client->getRequest()->getPost()->set('foo', 'bar');
         $client->prepareOAuth();
 
+        // @codingStandardsIgnoreLine
         $header = 'OAuth realm="",oauth_consumer_key="",oauth_nonce="67648c83ba9a7de429bd1b773fb96091",oauth_signature_method="HMAC-SHA1",oauth_timestamp="123456789",oauth_version="1.0",oauth_token="123",oauth_signature="fzWiYe4gZ2wkEMp9bEzWnlD88KE%3D"';
         $this->assertEquals($header, $client->getHeader('Authorization'));
     }
@@ -132,20 +146,27 @@ class OAuthTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['generateTimestamp', 'generateNonce'])
             ->getMock();
-        $mock->expects($this->once())->method('generateTimestamp')->will($this->returnValue('123456789'));
-        $mock->expects($this->once())->method('generateNonce')->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
+        $mock
+            ->expects($this->once())
+            ->method('generateTimestamp')
+            ->will($this->returnValue('123456789'));
+        $mock
+            ->expects($this->once())
+            ->method('generateNonce')
+            ->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
 
         $token = new Token\Access(null, $mock);
         $token->setToken('123')
               ->setTokenSecret('456');
 
-        $client = new OAuthClient(array(
+        $client = new OAuthClient([
             'token' => $token
-        ), 'http://www.example.com');
+        ], 'http://www.example.com');
         $client->getRequest()->getPost()->set('foo', 'bar');
         $client->getRequest()->getQuery()->set('baz', 'bat');
         $client->prepareOAuth();
 
+        // @codingStandardsIgnoreLine
         $header = 'OAuth realm="",oauth_consumer_key="",oauth_nonce="67648c83ba9a7de429bd1b773fb96091",oauth_signature_method="HMAC-SHA1",oauth_timestamp="123456789",oauth_version="1.0",oauth_token="123",oauth_signature="qj3FYtStzP083hT9QkqCdxsMauw%3D"';
         $this->assertEquals($header, $client->getHeader('Authorization'));
     }
@@ -157,20 +178,26 @@ class OAuthTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['generateTimestamp', 'generateNonce'])
             ->getMock();
-        $mock->expects($this->once())->method('generateTimestamp')->will($this->returnValue('123456789'));
-        $mock->expects($this->once())->method('generateNonce')->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
+        $mock
+            ->expects($this->once())
+            ->method('generateTimestamp')
+            ->will($this->returnValue('123456789'));
+        $mock
+            ->expects($this->once())
+            ->method('generateNonce')
+            ->will($this->returnValue('67648c83ba9a7de429bd1b773fb96091'));
 
         $token = new Token\Access(null, $mock);
         $token->setToken('123')
               ->setTokenSecret('456');
 
-        $client = new OAuthClient(array(
+        $client = new OAuthClient([
             'token' => $token
-        ), 'http://www.example.com');
+        ], 'http://www.example.com');
 
         $dummyHeader = Header\ContentType::fromString('Content-Type: application/octet-stream');
         $headers = $client->getRequest()->getHeaders();
-        $headers->addHeaders(array($dummyHeader));
+        $headers->addHeaders([$dummyHeader]);
         $client->prepareOAuth();
 
         $this->assertTrue($client->getRequest()->getHeaders()->has('Content-Type'));

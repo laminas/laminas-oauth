@@ -53,7 +53,7 @@ class OAuth
      */
     public static function getHttpClient()
     {
-        if (!isset(self::$httpClient)) {
+        if (! isset(self::$httpClient)) {
             self::$httpClient = new HTTPClient;
         } else {
             $request = self::$httpClient->getRequest();

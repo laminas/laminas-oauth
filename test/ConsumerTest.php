@@ -26,93 +26,93 @@ class ConsumerTest extends TestCase
 
     public function testConstructorSetsConsumerKey()
     {
-        $config = array('consumerKey'=>'1234567890');
+        $config = ['consumerKey' => '1234567890'];
         $consumer = new Consumer($config);
         $this->assertEquals('1234567890', $consumer->getConsumerKey());
     }
 
     public function testConstructorSetsConsumerSecret()
     {
-        $config = array('consumerSecret'=>'0987654321');
+        $config = ['consumerSecret' => '0987654321'];
         $consumer = new Consumer($config);
         $this->assertEquals('0987654321', $consumer->getConsumerSecret());
     }
 
     public function testSetsSignatureMethodFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'signatureMethod' => 'rsa-sha1'
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals('RSA-SHA1', $consumer->getSignatureMethod());
     }
 
     public function testSetsRequestMethodFromOptionsArray() // add back
     {
-        $options = array(
+        $options = [
             'requestMethod' => OAuth::GET
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals(OAuth::GET, $consumer->getRequestMethod());
     }
 
     public function testSetsRequestSchemeFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'requestScheme' => OAuth::REQUEST_SCHEME_POSTBODY
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals(OAuth::REQUEST_SCHEME_POSTBODY, $consumer->getRequestScheme());
     }
 
     public function testSetsVersionFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'version' => '1.1'
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals('1.1', $consumer->getVersion());
     }
 
     public function testSetsCallbackUrlFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'callbackUrl' => 'http://www.example.com/local'
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals('http://www.example.com/local', $consumer->getCallbackUrl());
     }
 
     public function testSetsRequestTokenUrlFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'requestTokenUrl' => 'http://www.example.com/request'
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals('http://www.example.com/request', $consumer->getRequestTokenUrl());
     }
 
     public function testSetsUserAuthorizationUrlFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'userAuthorizationUrl' => 'http://www.example.com/authorize'
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals('http://www.example.com/authorize', $consumer->getUserAuthorizationUrl());
     }
 
     public function testSetsAccessTokenUrlFromOptionsArray()
     {
-        $options = array(
+        $options = [
             'accessTokenUrl' => 'http://www.example.com/access'
-        );
+        ];
         $consumer = new Consumer($options);
         $this->assertEquals('http://www.example.com/access', $consumer->getAccessTokenUrl());
     }
 
     public function testSetSignatureMethodThrowsExceptionForInvalidMethod()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -121,7 +121,7 @@ class ConsumerTest extends TestCase
 
     public function testSetRequestMethodThrowsExceptionForInvalidMethod()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -130,7 +130,7 @@ class ConsumerTest extends TestCase
 
     public function testSetRequestSchemeThrowsExceptionForInvalidMethod()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -139,7 +139,7 @@ class ConsumerTest extends TestCase
 
     public function testSetLocalUrlThrowsExceptionForInvalidUrl()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -148,7 +148,7 @@ class ConsumerTest extends TestCase
 
     public function testSetRequestTokenUrlThrowsExceptionForInvalidUrl()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -157,7 +157,7 @@ class ConsumerTest extends TestCase
 
     public function testSetUserAuthorizationUrlThrowsExceptionForInvalidUrl()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -166,7 +166,7 @@ class ConsumerTest extends TestCase
 
     public function testSetAccessTokenUrlThrowsExceptionForInvalidUrl()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
 
         $this->expectException('Laminas\OAuth\Exception\ExceptionInterface');
@@ -175,7 +175,7 @@ class ConsumerTest extends TestCase
 
     public function testGetRequestTokenReturnsInstanceOfOauthTokenRequest()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
         $token = $consumer->getRequestToken(null, null, new RequestToken48231());
         $this->assertInstanceOf('Laminas\OAuth\Token\Request', $token);
@@ -183,15 +183,16 @@ class ConsumerTest extends TestCase
 
     public function testGetRedirectUrlReturnsUserAuthorizationUrlWithParameters()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321',
-            'userAuthorizationUrl'=>'http://www.example.com/authorize');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321',
+            'userAuthorizationUrl' => 'http://www.example.com/authorize'];
         $consumer = new Consumer48231($config);
-        $params = array('foo'=>'bar');
+        $params = ['foo' => 'bar'];
         $uauth = new Http\UserAuthorization($consumer, $params);
         $token = new Token\Request;
-        $token->setParams(array('oauth_token'=>'123456', 'oauth_token_secret'=>'654321'));
+        $token->setParams(['oauth_token' => '123456', 'oauth_token_secret' => '654321']);
         $redirectUrl = $consumer->getRedirectUrl($params, $token, $uauth);
         $this->assertEquals(
+            // @codingStandardsIgnoreLine
             'http://www.example.com/authorize?oauth_token=123456&oauth_callback=http%3A%2F%2Fwww.example.com%2Flocal&foo=bar',
             $redirectUrl
         );
@@ -199,24 +200,24 @@ class ConsumerTest extends TestCase
 
     public function testGetAccessTokenReturnsInstanceOfOauthTokenAccess()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer($config);
         $rtoken = new Token\Request;
         $rtoken->setToken('token');
-        $token = $consumer->getAccessToken(array('oauth_token'=>'token'), $rtoken, null, new AccessToken48231());
+        $token = $consumer->getAccessToken(['oauth_token' => 'token'], $rtoken, null, new AccessToken48231());
         $this->assertInstanceOf('Laminas\OAuth\Token\Access', $token);
     }
 
     public function testGetLastRequestTokenReturnsInstanceWhenExists()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer48231($config);
         $this->assertInstanceOf('Laminas\OAuth\Token\Request', $consumer->getLastRequestToken());
     }
 
     public function testGetLastAccessTokenReturnsInstanceWhenExists()
     {
-        $config = array('consumerKey'=>'12345','consumerSecret'=>'54321');
+        $config = ['consumerKey' => '12345','consumerSecret' => '54321'];
         $consumer = new Consumer48231($config);
         $this->assertInstanceOf('Laminas\OAuth\Token\Access', $consumer->getLastAccessToken());
     }

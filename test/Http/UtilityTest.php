@@ -74,5 +74,4 @@ class UtilityTest extends TestCase
         $string = '、';
         $this->assertEquals('%E3%80%81', Http\Utility::urlEncode($string));
     }
-
 }

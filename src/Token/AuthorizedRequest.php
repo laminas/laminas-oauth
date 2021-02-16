@@ -19,7 +19,7 @@ class AuthorizedRequest extends AbstractToken
     /**
      * @var array
      */
-    protected $_data = array();
+    protected $data = [];
 
     /**
      * Constructor
@@ -31,16 +31,16 @@ class AuthorizedRequest extends AbstractToken
     public function __construct(array $data = null, Http\Utility $utility = null)
     {
         if ($data !== null) {
-            $this->_data = $data;
-            $params = $this->_parseData();
+            $this->data = $data;
+            $params = $this->parseData();
             if (count($params) > 0) {
                 $this->setParams($params);
             }
         }
         if ($utility !== null) {
-            $this->_httpUtility = $utility;
+            $this->httpUtility = $utility;
         } else {
-            $this->_httpUtility = new Http\Utility;
+            $this->httpUtility = new Http\Utility;
         }
     }
 
@@ -51,7 +51,7 @@ class AuthorizedRequest extends AbstractToken
      */
     public function getData()
     {
-        return $this->_data;
+        return $this->data;
     }
 
     /**
@@ -61,8 +61,8 @@ class AuthorizedRequest extends AbstractToken
      */
     public function isValid()
     {
-        if (isset($this->_params[self::TOKEN_PARAM_KEY])
-            && !empty($this->_params[self::TOKEN_PARAM_KEY])
+        if (isset($this->params[self::TOKEN_PARAM_KEY])
+            && ! empty($this->params[self::TOKEN_PARAM_KEY])
         ) {
             return true;
         }
@@ -74,13 +74,13 @@ class AuthorizedRequest extends AbstractToken
      *
      * @return array
      */
-    protected function _parseData()
+    protected function parseData()
     {
-        $params = array();
-        if (empty($this->_data)) {
+        $params = [];
+        if (empty($this->data)) {
             return;
         }
-        foreach ($this->_data as $key => $value) {
+        foreach ($this->data as $key => $value) {
             $params[rawurldecode($key)] = rawurldecode($value);
         }
         return $params;

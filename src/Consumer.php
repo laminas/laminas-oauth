@@ -24,19 +24,19 @@ class Consumer extends OAuth
      *
      * @var \Laminas\OAuth\Token\Request
      */
-    protected $_requestToken = null;
+    protected $requestToken = null;
 
     /**
      * Access token retrieved from OAuth Provider
      *
      * @var \Laminas\OAuth\Token\Access
      */
-    protected $_accessToken = null;
+    protected $accessToken = null;
 
     /**
      * @var \Laminas\OAuth\Config
      */
-    protected $_config = null;
+    protected $config = null;
 
     /**
      * Constructor; create a new object with an optional array|Laminas_Config
@@ -46,12 +46,12 @@ class Consumer extends OAuth
      */
     public function __construct($options = null)
     {
-        $this->_config = new Config\StandardConfig;
+        $this->config = new Config\StandardConfig;
         if ($options !== null) {
             if ($options instanceof Traversable) {
                 $options = ArrayUtils::iteratorToArray($options);
             }
-            $this->_config->setOptions($options);
+            $this->config->setOptions($options);
         }
     }
 
@@ -72,7 +72,7 @@ class Consumer extends OAuth
     ) {
         if ($request === null) {
             $request = new Http\RequestToken($this, $customServiceParameters);
-        } elseif($customServiceParameters !== null) {
+        } elseif ($customServiceParameters !== null) {
             $request->setParameters($customServiceParameters);
         }
         if ($httpMethod !== null) {
@@ -81,8 +81,8 @@ class Consumer extends OAuth
             $request->setMethod($this->getRequestMethod());
         }
 
-        $this->_requestToken = $request->execute();
-        return $this->_requestToken;
+        $this->requestToken = $request->execute();
+        return $this->requestToken;
     }
 
     /**
@@ -105,11 +105,11 @@ class Consumer extends OAuth
     ) {
         if ($redirect === null) {
             $redirect = new Http\UserAuthorization($this, $customServiceParameters);
-        } elseif($customServiceParameters !== null) {
+        } elseif ($customServiceParameters !== null) {
             $redirect->setParameters($customServiceParameters);
         }
         if ($token !== null) {
-            $this->_requestToken = $token;
+            $this->requestToken = $token;
         }
         return $redirect->getUrl();
     }
@@ -142,7 +142,9 @@ class Consumer extends OAuth
      * @param  string $httpMethod
      * @param  \Laminas\OAuth\Http\AccessToken $request
      * @return \Laminas\OAuth\Token\Access
-     * @throws Exception\InvalidArgumentException on invalid authorization token, non-matching response authorization token, or unprovided authorization token
+     * @throws Exception\InvalidArgumentException on invalid authorization
+     *     token, non-matching response authorization token, or unprovided
+     *     authorization token
      */
     public function getAccessToken(
         $queryData,
@@ -151,9 +153,10 @@ class Consumer extends OAuth
         Http\AccessToken $request = null
     ) {
         $authorizedToken = new Token\AuthorizedRequest($queryData);
-        if (!$authorizedToken->isValid()) {
+        if (! $authorizedToken->isValid()) {
             throw new Exception\InvalidArgumentException(
-                'Response from Service Provider is not a valid authorized request token');
+                'Response from Service Provider is not a valid authorized request token'
+            );
         }
         if ($request === null) {
             $request = new Http\AccessToken($this);
@@ -161,9 +164,9 @@ class Consumer extends OAuth
 
         // OAuth 1.0a Verifier
         if ($authorizedToken->getParam('oauth_verifier') !== null) {
-            $params = array_merge($request->getParameters(), array(
+            $params = array_merge($request->getParameters(), [
                 'oauth_verifier' => $authorizedToken->getParam('oauth_verifier')
-            ));
+            ]);
             $request->setParameters($params);
         }
         if ($httpMethod !== null) {
@@ -181,9 +184,9 @@ class Consumer extends OAuth
         } else {
             throw new Exception\InvalidArgumentException('Request token must be passed to method');
         }
-        $this->_requestToken = $token;
-        $this->_accessToken = $request->execute();
-        return $this->_accessToken;
+        $this->requestToken = $token;
+        $this->accessToken = $request->execute();
+        return $this->accessToken;
     }
 
     /**
@@ -194,7 +197,7 @@ class Consumer extends OAuth
      */
     public function getLastRequestToken()
     {
-        return $this->_requestToken;
+        return $this->requestToken;
     }
 
     /**
@@ -205,7 +208,7 @@ class Consumer extends OAuth
      */
     public function getLastAccessToken()
     {
-        return $this->_accessToken;
+        return $this->accessToken;
     }
 
     /**
@@ -215,7 +218,7 @@ class Consumer extends OAuth
      */
     public function getToken()
     {
-        return $this->_accessToken;
+        return $this->accessToken;
     }
 
     /**
@@ -230,9 +233,9 @@ class Consumer extends OAuth
      */
     public function __call($method, array $args)
     {
-        if (!method_exists($this->_config, $method)) {
+        if (! method_exists($this->config, $method)) {
             throw new Exception\BadMethodCallException('Method does not exist: '.$method);
         }
-        return call_user_func_array(array($this->_config, $method), $args);
+        return call_user_func_array([$this->config, $method], $args);
     }
 }
