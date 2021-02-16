@@ -18,7 +18,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7.3 || ~8.0",
+        "php": "^7.3 || ~8.0.0",
         "laminas/laminas-config": "^2.6 || ^3.0",
         "laminas/laminas-crypt": "^2.6 || ^3.0",
         "laminas/laminas-http": "^2.14",
