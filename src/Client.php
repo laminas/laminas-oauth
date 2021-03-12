@@ -34,7 +34,7 @@ class Client extends HttpClient
      *
      * @var Config\StandardConfig
      */
-    protected $config = null;
+    protected $oauthConfig = null;
 
     /**
      * True if this request is being made with data supplied by
@@ -57,12 +57,12 @@ class Client extends HttpClient
     public function __construct($oauthOptions, $uri = null, $config = null)
     {
         parent::__construct($uri, $config);
-        $this->config = new Config\StandardConfig;
+        $this->oauthConfig = new Config\StandardConfig();
         if ($oauthOptions !== null) {
             if ($oauthOptions instanceof Traversable) {
                 $oauthOptions = ArrayUtils::iteratorToArray($oauthOptions);
             }
-            $this->config->setOptions($oauthOptions);
+            $this->oauthConfig->setOptions($oauthOptions);
         }
     }
 
@@ -193,7 +193,7 @@ class Client extends HttpClient
             case OAuth::REQUEST_SCHEME_HEADER:
                 $oauthHeaderValue = $this->getToken()->toHeader(
                     $this->getRequest()->getUriString(),
-                    $this->config,
+                    $this->oauthConfig,
                     $this->getSignableParameters()
                 );
                 $requestHeaders = $this->getRequest()->getHeaders();
@@ -209,7 +209,7 @@ class Client extends HttpClient
                 }
                 $query  = $this->getToken()->toQueryString(
                     $this->getRequest()->getUriString(),
-                    $this->config,
+                    $this->oauthConfig,
                     $this->getSignableParameters()
                 );
 
@@ -218,7 +218,7 @@ class Client extends HttpClient
             case OAuth::REQUEST_SCHEME_QUERYSTRING:
                 $query  = $this->getToken()->toQueryString(
                     $this->getRequest()->getUriString(),
-                    $this->config,
+                    $this->oauthConfig,
                     $this->getSignableParameters()
                 );
 
@@ -261,9 +261,9 @@ class Client extends HttpClient
      */
     public function __call($method, array $args)
     {
-        if (! method_exists($this->config, $method)) {
+        if (! method_exists($this->oauthConfig, $method)) {
             throw new Exception\BadMethodCallException('Method does not exist: ' . $method);
         }
-        return call_user_func_array([$this->config, $method], $args);
+        return call_user_func_array([$this->oauthConfig, $method], $args);
     }
 }
