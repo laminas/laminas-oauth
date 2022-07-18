@@ -120,7 +120,7 @@ class Utility
      */
     public function sign(
         array $params,
-        $signatureMethod,
+        string $signatureMethod,
         $consumerSecret,
         $tokenSecret = null,
         $method = null,

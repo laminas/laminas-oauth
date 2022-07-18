@@ -22,7 +22,7 @@ class HTTPUtility32874 extends Utility
 
     public function sign(
         array $params,
-        $signatureMethod,
+        string $signatureMethod,
         $consumerSecret,
         $accessTokenSecret = null,
         $method = null,
