@@ -189,7 +189,7 @@ class Utility
      * @param  string $value
      * @return string
      */
-    public static function urlEncode($value)
+    public static function urlEncode(string $value)
     {
         $encoded = rawurlencode($value);
         $encoded = str_replace('%7E', '~', $encoded);
