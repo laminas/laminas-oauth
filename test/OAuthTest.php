@@ -94,9 +94,7 @@ class OAuthTest extends TestCase
               ->setTokenSecret('456');
 
         $client = new OAuthClient([
-            'token' => $token,
-            'consumerSecret' => '', // for PHP 8.1 compatibility
-            'consumerKey' => ''
+            'token' => $token
         ], 'http://www.example.com');
         $client->getRequest()->getQuery()->set('foo', 'bar');
         $client->prepareOAuth();
@@ -126,9 +124,7 @@ class OAuthTest extends TestCase
               ->setTokenSecret('456');
 
         $client = new OAuthClient([
-            'token' => $token,
-            'consumerSecret' => '', // for PHP 8.1 compatibility
-            'consumerKey' => ''
+            'token' => $token
         ], 'http://www.example.com');
         $client->getRequest()->getPost()->set('foo', 'bar');
         $client->prepareOAuth();
@@ -158,9 +154,7 @@ class OAuthTest extends TestCase
               ->setTokenSecret('456');
 
         $client = new OAuthClient([
-            'token' => $token,
-            'consumerSecret' => '', // for PHP 8.1 compatibility
-            'consumerKey' => ''
+            'token' => $token
         ], 'http://www.example.com');
         $client->getRequest()->getPost()->set('foo', 'bar');
         $client->getRequest()->getQuery()->set('baz', 'bat');
@@ -192,9 +186,7 @@ class OAuthTest extends TestCase
               ->setTokenSecret('456');
 
         $client = new OAuthClient([
-            'token' => $token,
-            'consumerSecret' => '', // for PHP 8.1 compatibility
-            'consumerKey' => ''
+            'token' => $token
         ], 'http://www.example.com');
 
         $dummyHeader = Header\ContentType::fromString('Content-Type: application/octet-stream');
