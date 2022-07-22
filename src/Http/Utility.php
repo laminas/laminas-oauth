@@ -128,7 +128,7 @@ class Utility
     ) {
         $className = '';
         $hashAlgo  = null;
-        $parts     = explode('-', $signatureMethod);
+        $parts     = explode('-', (string) $signatureMethod);
         if (count($parts) > 1) {
             $className = 'Laminas\OAuth\Signature\\' . ucfirst(strtolower($parts[0]));
             $hashAlgo  = $parts[1];
@@ -191,7 +191,7 @@ class Utility
      */
     public static function urlEncode($value)
     {
-        $encoded = rawurlencode($value);
+        $encoded = rawurlencode((string) $value);
         $encoded = str_replace('%7E', '~', $encoded);
         return $encoded;
     }
