@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 class RequestTokenTest extends TestCase
 {
     protected $stubConsumer = null;
+    protected $stubConsumer2 = null;
+    protected $stubHttpUtility = null;
 
     public function setup(): void
     {
