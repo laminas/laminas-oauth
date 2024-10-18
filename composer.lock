@@ -2658,12 +2658,12 @@
             "version": "2.9.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
+                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
                 "reference": "2acf168de78487db620ab4bc524135a13cfe6745"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2acf168de78487db620ab4bc524135a13cfe6745",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/2acf168de78487db620ab4bc524135a13cfe6745",
                 "reference": "2acf168de78487db620ab4bc524135a13cfe6745",
                 "shasum": ""
             },
