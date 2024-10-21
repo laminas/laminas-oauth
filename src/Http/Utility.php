@@ -22,7 +22,7 @@ class Utility
     public function assembleParams(
         $url,
         ConfigInterface $config,
-        array $serviceProviderParams = null
+        ?array $serviceProviderParams = null
     ) {
         $params = [
             'oauth_consumer_key'     => $config->getConsumerKey(),

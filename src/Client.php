@@ -162,7 +162,7 @@ class Client extends HttpClient
      * @param  null|Laminas\Http\Request $method
      * @return HttpResponse
      */
-    public function send(HttpRequest $request = null)
+    public function send(?HttpRequest $request = null)
     {
         $this->prepareOAuth();
         return parent::send($request);

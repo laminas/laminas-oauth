@@ -19,8 +19,8 @@ class Request extends AbstractToken
      * @param null|Laminas\OAuth\Http\Utility $utility
      */
     public function __construct(
-        HTTPResponse $response = null,
-        HTTPUtility $utility = null
+        ?HTTPResponse $response = null,
+        ?HTTPUtility $utility = null
     ) {
         parent::__construct($response, $utility);
 

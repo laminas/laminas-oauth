@@ -22,7 +22,7 @@ class AuthorizedRequest extends AbstractToken
      * @param  null|\Laminas\OAuth\Http\Utility $utility
      * @return void
      */
-    public function __construct(array $data = null, Http\Utility $utility = null)
+    public function __construct(?array $data = null, ?Http\Utility $utility = null)
     {
         if ($data !== null) {
             $this->data = $data;

@@ -60,9 +60,9 @@ class Consumer extends OAuth
      * @return Laminas\OAuth\Token\Request
      */
     public function getRequestToken(
-        array $customServiceParameters = null,
-        $httpMethod = null,
-        Http\RequestToken $request = null
+        ?array $customServiceParameters = null,
+        ?string $httpMethod = null,
+        ?Http\RequestToken $request = null
     ) {
         if ($request === null) {
             $request = new Http\RequestToken($this, $customServiceParameters);
@@ -93,9 +93,9 @@ class Consumer extends OAuth
      * @return string
      */
     public function getRedirectUrl(
-        array $customServiceParameters = null,
-        Token\Request $token = null,
-        Http\UserAuthorization $redirect = null
+        ?array $customServiceParameters = null,
+        ?Token\Request $token = null,
+        ?Http\UserAuthorization $redirect = null
     ) {
         if ($redirect === null) {
             $redirect = new Http\UserAuthorization($this, $customServiceParameters);
@@ -119,8 +119,8 @@ class Consumer extends OAuth
      * @return void
      */
     public function redirect(
-        array $customServiceParameters = null,
-        Http\UserAuthorization $request = null
+        ?array $customServiceParameters = null,
+        ?Http\UserAuthorization $request = null
     ) {
         $redirectUrl = $this->getRedirectUrl($customServiceParameters, $request);
         header('Location: ' . $redirectUrl);
@@ -144,7 +144,7 @@ class Consumer extends OAuth
         $queryData,
         Token\Request $token,
         $httpMethod = null,
-        Http\AccessToken $request = null
+        ?Http\AccessToken $request = null
     ) {
         $authorizedToken = new Token\AuthorizedRequest($queryData);
         if (! $authorizedToken->isValid()) {

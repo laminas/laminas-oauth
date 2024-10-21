@@ -46,8 +46,8 @@ abstract class AbstractToken implements TokenInterface
      * @return void
      */
     public function __construct(
-        HTTPResponse $response = null,
-        HTTPUtility $utility = null
+        ?HTTPResponse $response = null,
+        ?HTTPUtility $utility = null
     ) {
         if ($response !== null) {
             $this->response = $response;

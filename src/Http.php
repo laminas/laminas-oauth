@@ -56,8 +56,8 @@ class Http
      */
     public function __construct(
         Consumer $consumer,
-        array $parameters = null,
-        Http\Utility $utility = null
+        ?array $parameters = null,
+        ?Http\Utility $utility = null
     ) {
         $this->consumer = $consumer;
         $this->preferredRequestScheme = $this->consumer->getRequestScheme();
@@ -197,7 +197,7 @@ class Http
      * @return void
      * @throws Exception\RuntimeException if unable to retrieve valid token response
      */
-    protected function assessRequestAttempt(\Laminas\Http\Response $response = null)
+    protected function assessRequestAttempt(?\Laminas\Http\Response $response = null)
     {
         switch ($this->preferredRequestScheme) {
             case OAuth::REQUEST_SCHEME_HEADER:

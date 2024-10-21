@@ -26,8 +26,8 @@ class Access extends AbstractToken
     public function toHeader(
         $url,
         Config $config,
-        array $customParams = null,
-        $realm = null
+        ?array $customParams = null,
+        ?string $realm = null
     ) {
         $uri = Uri\UriFactory::factory($url);
         if (! $uri->isValid()
@@ -50,7 +50,7 @@ class Access extends AbstractToken
      * @return string
      * @throws Exception\InvalidArgumentException
      */
-    public function toQueryString($url, Config $config, array $params = null)
+    public function toQueryString($url, Config $config, ?array $params = null)
     {
         $uri = Uri\UriFactory::factory($url);
         if (! $uri->isValid()
