@@ -61,7 +61,7 @@ class Consumer extends OAuth
      */
     public function getRequestToken(
         ?array $customServiceParameters = null,
-        ?string $httpMethod = null,
+              $httpMethod = null,
         ?Http\RequestToken $request = null
     ) {
         if ($request === null) {

@@ -27,7 +27,7 @@ class Access extends AbstractToken
         $url,
         Config $config,
         ?array $customParams = null,
-        ?string $realm = null
+        $realm = null
     ) {
         $uri = Uri\UriFactory::factory($url);
         if (! $uri->isValid()
