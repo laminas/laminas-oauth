@@ -12,7 +12,7 @@ use Traversable;
 use function array_merge;
 use function call_user_func_array;
 use function method_exists;
-use function strtolower;
+use function strtoupper;
 
 class Client extends HttpClient
 {
@@ -147,16 +147,22 @@ class Client extends HttpClient
      */
     public function setMethod($method = HttpRequest::METHOD_GET)
     {
-        if (strtolower($method) === strtolower(HttpRequest::METHOD_GET)) {
-            $this->setRequestMethod(HttpRequest::METHOD_GET);
-        } elseif (strtolower($method) === strtolower(HttpRequest::METHOD_POST)) {
-            $this->setRequestMethod(HttpRequest::METHOD_POST);
-        } elseif (strtolower($method) === strtolower(HttpRequest::METHOD_PUT)) {
-            $this->setRequestMethod(HttpRequest::METHOD_PUT);
-        } elseif (strtolower($method) === strtolower(HttpRequest::METHOD_DELETE)) {
-            $this->setRequestMethod(HttpRequest::METHOD_DELETE);
-        } elseif (strtolower($method) === strtolower(HttpRequest::METHOD_HEAD)) {
-            $this->setRequestMethod(HttpRequest::METHOD_HEAD);
+        switch (strtoupper($method)) {
+            case HttpRequest::METHOD_GET:
+                $this->setRequestMethod(HttpRequest::METHOD_GET);
+                break;
+            case HttpRequest::METHOD_POST:
+                $this->setRequestMethod(HttpRequest::METHOD_POST);
+                break;
+            case HttpRequest::METHOD_PUT:
+                $this->setRequestMethod(HttpRequest::METHOD_PUT);
+                break;
+            case HttpRequest::METHOD_DELETE:
+                $this->setRequestMethod(HttpRequest::METHOD_DELETE);
+                break;
+            case HttpRequest::METHOD_HEAD:
+                $this->setRequestMethod(HttpRequest::METHOD_HEAD);
+                break;
         }
         return parent::setMethod($method);
     }
