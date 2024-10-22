@@ -1,4 +1,5 @@
 <?php
+
 namespace LaminasTest\OAuth\Config;
 
 use Laminas\OAuth\Config\StandardConfig;
