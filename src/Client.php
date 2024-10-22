@@ -12,7 +12,6 @@ use Traversable;
 use function array_merge;
 use function call_user_func_array;
 use function method_exists;
-use function strtoupper;
 
 class Client extends HttpClient
 {
@@ -147,7 +146,6 @@ class Client extends HttpClient
      */
     public function setMethod($method = HttpRequest::METHOD_GET)
     {
-        $method = strtoupper($method);
         if ($method === HttpRequest::METHOD_GET) {
             $this->setRequestMethod(HttpRequest::METHOD_GET);
         } elseif ($method === HttpRequest::METHOD_POST) {
