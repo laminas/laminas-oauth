@@ -12,6 +12,7 @@ use Traversable;
 use function array_merge;
 use function call_user_func_array;
 use function method_exists;
+use function strtoupper;
 
 class Client extends HttpClient
 {
