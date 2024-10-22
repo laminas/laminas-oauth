@@ -35,7 +35,7 @@
         "laminas/laminas-uri": "^2.9"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~1",
+        "laminas/laminas-coding-standard": "~2.5.0",
         "phpunit/phpunit": "^9.6.13"
     },
     "autoload": {
