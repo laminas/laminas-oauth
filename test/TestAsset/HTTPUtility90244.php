@@ -23,7 +23,6 @@ class HTTPUtility90244 extends Utility
     }
 
     /**
-     * @param array $params
      * @param string $signatureMethod
      * @param string $consumerSecret
      * @param string $accessTokenSecret

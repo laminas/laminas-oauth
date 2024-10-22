@@ -12,7 +12,6 @@ use Traversable;
 use function array_merge;
 use function call_user_func_array;
 use function method_exists;
-use function strtoupper;
 
 class Client extends HttpClient
 {
@@ -147,7 +146,7 @@ class Client extends HttpClient
      */
     public function setMethod($method = HttpRequest::METHOD_GET)
     {
-        switch (strtoupper($method)) {
+        switch ($method) {
             case HttpRequest::METHOD_GET:
                 $this->setRequestMethod(HttpRequest::METHOD_GET);
                 break;
@@ -207,7 +206,7 @@ class Client extends HttpClient
                 $requestHeaders->addHeaders(['Authorization' => $oauthHeaderValue]);
                 break;
             case OAuth::REQUEST_SCHEME_POSTBODY:
-                if ($this->getRequestMethod() === HttpRequest::METHOD_GET) {
+                if ($this->getMethod() === HttpRequest::METHOD_GET) {
                     throw new Exception\RuntimeException(
                         'The client is configured to'
                             . ' pass OAuth parameters through a POST body but request method'
