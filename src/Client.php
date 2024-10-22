@@ -146,22 +146,17 @@ class Client extends HttpClient
      */
     public function setMethod($method = HttpRequest::METHOD_GET)
     {
-        switch ($method) {
-            case HttpRequest::METHOD_GET:
-                $this->setRequestMethod(HttpRequest::METHOD_GET);
-                break;
-            case HttpRequest::METHOD_POST:
-                $this->setRequestMethod(HttpRequest::METHOD_POST);
-                break;
-            case HttpRequest::METHOD_PUT:
-                $this->setRequestMethod(HttpRequest::METHOD_PUT);
-                break;
-            case HttpRequest::METHOD_DELETE:
-                $this->setRequestMethod(HttpRequest::METHOD_DELETE);
-                break;
-            case HttpRequest::METHOD_HEAD:
-                $this->setRequestMethod(HttpRequest::METHOD_HEAD);
-                break;
+        $method = strtoupper($method);
+        if ($method === HttpRequest::METHOD_GET) {
+            $this->setRequestMethod(HttpRequest::METHOD_GET);
+        } elseif ($method === HttpRequest::METHOD_POST) {
+            $this->setRequestMethod(HttpRequest::METHOD_POST);
+        } elseif ($method === HttpRequest::METHOD_PUT) {
+            $this->setRequestMethod(HttpRequest::METHOD_PUT);
+        } elseif ($method === HttpRequest::METHOD_DELETE) {
+            $this->setRequestMethod(HttpRequest::METHOD_DELETE);
+        } elseif ($method === HttpRequest::METHOD_HEAD) {
+            $this->setRequestMethod(HttpRequest::METHOD_HEAD);
         }
         return parent::setMethod($method);
     }
