@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Token;
 
 use Laminas\Http\Response as HTTPResponse;
 use Laminas\OAuth\Client;
 use Laminas\OAuth\Http\Utility as HTTPUtility;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
 class Request extends AbstractToken
 {
     /**

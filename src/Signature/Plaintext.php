@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Signature;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function implode;
+
 class Plaintext extends AbstractSignature
 {
     /**
@@ -21,7 +21,6 @@ class Plaintext extends AbstractSignature
         if ($this->tokenSecret === null) {
             return $this->consumerSecret . '&';
         }
-        $return = implode('&', [$this->consumerSecret, $this->tokenSecret]);
-        return $return;
+        return implode('&', [$this->consumerSecret, $this->tokenSecret]);
     }
 }

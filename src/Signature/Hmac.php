@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Signature;
 
 use Laminas\Crypt\Hmac as HMACEncryption;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function base64_encode;
+
 class Hmac extends AbstractSignature
 {
     /**

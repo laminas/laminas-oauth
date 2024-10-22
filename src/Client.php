@@ -1,22 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth;
 
 use Laminas\Http\Client as HttpClient;
+use Laminas\Http\Client\Exception\RuntimeException;
 use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Stdlib\ArrayUtils;
 use Traversable;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function array_merge;
+use function call_user_func_array;
+use function method_exists;
+
 class Client extends HttpClient
 {
     /**
      * Flag to indicate that the client has detected the server as supporting
      * OAuth 1.0a
+     *
+     * @var bool
      */
     public static $supportsRevisionA = false;
 
@@ -28,7 +33,7 @@ class Client extends HttpClient
      *
      * @var Config\StandardConfig
      */
-    protected $oauthConfig = null;
+    protected $oauthConfig;
 
     /**
      * True if this request is being made with data supplied by
@@ -36,7 +41,7 @@ class Client extends HttpClient
      *
      * @var bool
      */
-    protected $streamingRequest = null;
+    protected $streamingRequest;
 
     /**
      * Constructor; creates a new HTTP Client instance which itself is
@@ -46,7 +51,7 @@ class Client extends HttpClient
      *
      * @param  array|Traversable $oauthOptions
      * @param  string $uri
-     * @param  array|Traversable $options
+     * @param  array|Traversable $config
      */
     public function __construct($oauthOptions, $uri = null, $config = null)
     {
@@ -89,21 +94,24 @@ class Client extends HttpClient
      * Prepare the request body (for POST and PUT requests)
      *
      * @return string
-     * @throws \Laminas\Http\Client\Exception\RuntimeException
+     * @throws RuntimeException
      */
     protected function prepareBody()
     {
         if ($this->streamingRequest) {
-            $this->setHeaders(['Content-Length' =>
-                $this->raw_post_data->getTotalSize()]);
+            $this->setHeaders([
+                'Content-Length'
+                => $this->raw_post_data->getTotalSize(),
+            ]);
             return $this->raw_post_data;
         }
         return parent::prepareBody();
     }
 
     /**
-     * Clear all custom parameters we set.
+     * Clear all custom parameters we set
      *
+     * @param bool $clearAll
      * @return HttpClient
      */
     public function resetParameters($clearAll = false)
@@ -140,15 +148,15 @@ class Client extends HttpClient
      */
     public function setMethod($method = HttpRequest::METHOD_GET)
     {
-        if ($method == HttpRequest::METHOD_GET) {
+        if ($method === HttpRequest::METHOD_GET) {
             $this->setRequestMethod(HttpRequest::METHOD_GET);
-        } elseif ($method == HttpRequest::METHOD_POST) {
+        } elseif ($method === HttpRequest::METHOD_POST) {
             $this->setRequestMethod(HttpRequest::METHOD_POST);
-        } elseif ($method == HttpRequest::METHOD_PUT) {
+        } elseif ($method === HttpRequest::METHOD_PUT) {
             $this->setRequestMethod(HttpRequest::METHOD_PUT);
-        } elseif ($method == HttpRequest::METHOD_DELETE) {
+        } elseif ($method === HttpRequest::METHOD_DELETE) {
             $this->setRequestMethod(HttpRequest::METHOD_DELETE);
-        } elseif ($method == HttpRequest::METHOD_HEAD) {
+        } elseif ($method === HttpRequest::METHOD_HEAD) {
             $this->setRequestMethod(HttpRequest::METHOD_HEAD);
         }
         return parent::setMethod($method);
@@ -178,7 +186,7 @@ class Client extends HttpClient
      * @return void
      * @throws \Laminas\OAuth\Exception\RuntimeException If POSTBODY scheme
      *     requested, but GET request method used; or if invalid request scheme
-     *     provided
+     *     provided.
      */
     public function prepareOAuth()
     {
@@ -190,18 +198,18 @@ class Client extends HttpClient
                     $this->oauthConfig,
                     $this->getSignableParameters()
                 );
-                $requestHeaders = $this->getRequest()->getHeaders();
+                $requestHeaders   = $this->getRequest()->getHeaders();
                 $requestHeaders->addHeaders(['Authorization' => $oauthHeaderValue]);
                 break;
             case OAuth::REQUEST_SCHEME_POSTBODY:
-                if ($this->getRequestMethod() == HttpRequest::METHOD_GET) {
+                if ($this->getRequestMethod() === HttpRequest::METHOD_GET) {
                     throw new Exception\RuntimeException(
                         'The client is configured to'
                             . ' pass OAuth parameters through a POST body but request method'
                             . ' is set to GET'
                     );
                 }
-                $query  = $this->getToken()->toQueryString(
+                $query = $this->getToken()->toQueryString(
                     $this->getRequest()->getUriString(),
                     $this->oauthConfig,
                     $this->getSignableParameters()
@@ -210,7 +218,7 @@ class Client extends HttpClient
                 $this->setRawBody($query);
                 break;
             case OAuth::REQUEST_SCHEME_QUERYSTRING:
-                $query  = $this->getToken()->toQueryString(
+                $query = $this->getToken()->toQueryString(
                     $this->getRequest()->getUriString(),
                     $this->oauthConfig,
                     $this->getSignableParameters()
@@ -251,7 +259,7 @@ class Client extends HttpClient
      * @param  string $method
      * @param  array $args
      * @return mixed
-     * @throws Exception\BadMethodCallException if method does not exist in config object
+     * @throws Exception\BadMethodCallException If method does not exist in config object.
      */
     public function __call($method, array $args)
     {

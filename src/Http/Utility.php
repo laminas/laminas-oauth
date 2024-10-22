@@ -1,13 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Http;
 
 use Laminas\OAuth\Config\ConfigInterface;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function array_merge;
+use function count;
+use function explode;
+use function implode;
+use function md5;
+use function preg_match;
+use function rand;
+use function rawurldecode;
+use function rawurlencode;
+use function str_replace;
+use function strtolower;
+use function time;
+use function ucfirst;
+use function uniqid;
+
 class Utility
 {
     /**
@@ -15,7 +28,6 @@ class Utility
      * params other than the defaults expected for any OAuth query.
      *
      * @param  string $url
-     * @param  ConfigInterface $config
      * @param  null|array $serviceProviderParams
      * @return array
      */
@@ -32,10 +44,9 @@ class Utility
             'oauth_version'          => $config->getVersion(),
         ];
 
-        if ($config->getToken()->getToken() != null) {
+        if ($config->getToken()->getToken() !== null) {
             $params['oauth_token'] = $config->getToken()->getToken();
         }
-
 
         if ($serviceProviderParams !== null) {
             $params = array_merge($params, $serviceProviderParams);
@@ -86,7 +97,7 @@ class Utility
      * @param  array $params
      * @param  null|string $realm
      * @param  bool $excludeCustomParams
-     * @return void
+     * @return string
      */
     public function toAuthorizationHeader(array $params, $realm = null, $excludeCustomParams = true)
     {
@@ -157,7 +168,7 @@ class Utility
         // periods and uses urldecode, not rawurldecode.
         $parts = explode('&', $query);
         foreach ($parts as $pair) {
-            $kv = explode('=', $pair);
+            $kv                           = explode('=', $pair);
             $params[rawurldecode($kv[0])] = rawurldecode($kv[1]);
         }
         return $params;

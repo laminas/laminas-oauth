@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Config;
 
+use Laminas\Crypt\PublicKey\Rsa\PrivateKey;
+use Laminas\Crypt\PublicKey\Rsa\PublicKey;
 use Laminas\OAuth\Exception;
 use Laminas\OAuth\OAuth;
 use Laminas\OAuth\Token\TokenInterface;
@@ -9,10 +13,13 @@ use Laminas\Stdlib\ArrayUtils;
 use Laminas\Uri;
 use Traversable;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function in_array;
+use function is_array;
+use function rtrim;
+use function sprintf;
+use function strtolower;
+use function strtoupper;
+
 class StandardConfig implements ConfigInterface
 {
     /**
@@ -55,14 +62,14 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $callbackUrl = null;
+    protected $callbackUrl;
 
     /**
      * The URL root to append default OAuth endpoint paths.
      *
      * @var string
      */
-    protected $siteUrl = null;
+    protected $siteUrl;
 
     /**
      * The URL to which requests for a Request Token should be directed.
@@ -70,7 +77,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $requestTokenUrl = null;
+    protected $requestTokenUrl;
 
     /**
      * The URL to which requests for an Access Token should be directed.
@@ -78,7 +85,7 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $accessTokenUrl = null;
+    protected $accessTokenUrl;
 
     /**
      * The URL to which users should be redirected to authorize a Request Token.
@@ -86,45 +93,45 @@ class StandardConfig implements ConfigInterface
      *
      * @var string
      */
-    protected $authorizeUrl = null;
+    protected $authorizeUrl;
 
     /**
      * An OAuth application's Consumer Key.
      *
      * @var string
      */
-    protected $consumerKey = null;
+    protected $consumerKey;
 
     /**
      * Every Consumer Key has a Consumer Secret unless you're in RSA-land.
      *
      * @var string
      */
-    protected $consumerSecret = null;
+    protected $consumerSecret;
 
     /**
      * If relevant, a PEM encoded RSA private key encapsulated as a
      * Laminas_Crypt_Rsa Key
      *
-     * @var \Laminas\Crypt\PublicKey\Rsa\PrivateKey
+     * @var PrivateKey
      */
-    protected $rsaPrivateKey = null;
+    protected $rsaPrivateKey;
 
     /**
      * If relevant, a PEM encoded RSA public key encapsulated as a
      * Laminas_Crypt_Rsa Key
      *
-     * @var \Laminas\Crypt\PublicKey\Rsa\PublicKey
+     * @var PublicKey
      */
-    protected $rsaPublicKey = null;
+    protected $rsaPublicKey;
 
     /**
      * Generally this will nearly always be an Access Token represented as a
      * Laminas_OAuth_Token_Access object.
      *
-     * @var \Laminas\OAuth\Token\TokenInterface
+     * @var TokenInterface
      */
-    protected $token = null;
+    protected $token;
 
     /**
      * Constructor; create a new object with an optional array|Traversable
@@ -262,13 +269,17 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $method
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException if unsupported signature method specified
+     * @throws Exception\InvalidArgumentException If unsupported signature method specified.
      */
     public function setSignatureMethod($method)
     {
         $method = strtoupper($method);
-        if (! in_array($method, [
-                'HMAC-SHA1', 'HMAC-SHA256', 'RSA-SHA1', 'PLAINTEXT'
+        if (
+            ! in_array($method, [
+                'HMAC-SHA1',
+                'HMAC-SHA256',
+                'RSA-SHA1',
+                'PLAINTEXT',
             ])
         ) {
             throw new Exception\InvalidArgumentException('Unsupported signature method: '
@@ -294,13 +305,14 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $scheme
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException if invalid scheme specified,
-     *     or if POSTBODY set when request method of GET is specified
+     * @throws Exception\InvalidArgumentException If invalid scheme specified
+     *     or if POSTBODY set when request method of GET is specified.
      */
     public function setRequestScheme($scheme)
     {
         $scheme = strtolower($scheme);
-        if (! in_array($scheme, [
+        if (
+            ! in_array($scheme, [
                 OAuth::REQUEST_SCHEME_HEADER,
                 OAuth::REQUEST_SCHEME_POSTBODY,
                 OAuth::REQUEST_SCHEME_QUERYSTRING,
@@ -310,8 +322,9 @@ class StandardConfig implements ConfigInterface
                 '\'' . $scheme . '\' is an unsupported request scheme'
             );
         }
-        if ($scheme == OAuth::REQUEST_SCHEME_POSTBODY
-            && $this->getRequestMethod() == OAuth::GET
+        if (
+            $scheme === OAuth::REQUEST_SCHEME_POSTBODY
+            && $this->getRequestMethod() === OAuth::GET
         ) {
             throw new Exception\InvalidArgumentException(
                 'Cannot set POSTBODY request method if HTTP method set to GET'
@@ -358,7 +371,7 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $url Valid URI or Out-Of-Band constant 'oob'
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid URLs
+     * @throws Exception\InvalidArgumentException For invalid URLs.
      */
     public function setCallbackUrl($url)
     {
@@ -384,7 +397,7 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $url
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid URLs
+     * @throws Exception\InvalidArgumentException For invalid URLs.
      */
     public function setSiteUrl($url)
     {
@@ -408,7 +421,7 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $url
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid URLs
+     * @throws Exception\InvalidArgumentException For invalid URLs.
      */
     public function setRequestTokenUrl($url)
     {
@@ -438,7 +451,7 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $url
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid URLs
+     * @throws Exception\InvalidArgumentException For invalid URLs.
      */
     public function setAccessTokenUrl($url)
     {
@@ -468,7 +481,7 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $url
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid URLs
+     * @throws Exception\InvalidArgumentException For invalid URLs.
      */
     public function setUserAuthorizationUrl($url)
     {
@@ -480,7 +493,7 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $url
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid URLs
+     * @throws Exception\InvalidArgumentException For invalid URLs.
      */
     public function setAuthorizeUrl($url)
     {
@@ -520,12 +533,13 @@ class StandardConfig implements ConfigInterface
      *
      * @param  string $method
      * @return StandardConfig
-     * @throws Exception\InvalidArgumentException for invalid request methods
+     * @throws Exception\InvalidArgumentException For invalid request methods.
      */
     public function setRequestMethod($method)
     {
         $method = strtoupper($method);
-        if (! in_array($method, [
+        if (
+            ! in_array($method, [
                 OAuth::GET,
                 OAuth::POST,
                 OAuth::PUT,
@@ -551,10 +565,9 @@ class StandardConfig implements ConfigInterface
     /**
      * Set RSA public key
      *
-     * @param  \Laminas\Crypt\PublicKey\Rsa\PublicKey $key
      * @return StandardConfig
      */
-    public function setRsaPublicKey(\Laminas\Crypt\PublicKey\Rsa\PublicKey $key)
+    public function setRsaPublicKey(PublicKey $key)
     {
         $this->rsaPublicKey = $key;
         return $this;
@@ -563,7 +576,7 @@ class StandardConfig implements ConfigInterface
     /**
      * Get RSA public key
      *
-     * @return \Laminas\Crypt\PublicKey\Rsa\PublicKey
+     * @return PublicKey
      */
     public function getRsaPublicKey()
     {
@@ -573,10 +586,9 @@ class StandardConfig implements ConfigInterface
     /**
      * Set RSA private key
      *
-     * @param  \Laminas\Crypt\PublicKey\Rsa\PrivateKey $key
      * @return StandardConfig
      */
-    public function setRsaPrivateKey(\Laminas\Crypt\PublicKey\Rsa\PrivateKey $key)
+    public function setRsaPrivateKey(PrivateKey $key)
     {
         $this->rsaPrivateKey = $key;
         return $this;
@@ -585,7 +597,7 @@ class StandardConfig implements ConfigInterface
     /**
      * Get RSA private key
      *
-     * @return \Laminas\Crypt\PublicKey\Rsa\PrivateKey
+     * @return PrivateKey
      */
     public function getRsaPrivateKey()
     {
@@ -595,7 +607,6 @@ class StandardConfig implements ConfigInterface
     /**
      * Set OAuth token
      *
-     * @param  TokenInterface $token
      * @return StandardConfig
      */
     public function setToken(TokenInterface $token)

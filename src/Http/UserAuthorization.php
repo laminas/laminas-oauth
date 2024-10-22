@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Http;
 
+use Laminas\OAuth\Client;
 use Laminas\OAuth\Http as HTTPClient;
 use Laminas\Uri;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function array_merge;
+
 class UserAuthorization extends HTTPClient
 {
     /**
@@ -40,7 +41,7 @@ class UserAuthorization extends HTTPClient
             'oauth_token' => $this->consumer->getLastRequestToken()->getToken(),
         ];
 
-        if (! \Laminas\OAuth\Client::$supportsRevisionA) {
+        if (! Client::$supportsRevisionA) {
             $callback = $this->consumer->getCallbackUrl();
             if (! empty($callback)) {
                 $params['oauth_callback'] = $callback;

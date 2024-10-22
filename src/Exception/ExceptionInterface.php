@@ -1,12 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\OAuth\Exception;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
 interface ExceptionInterface
 {
-
 }
