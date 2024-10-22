@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Laminas\OAuth\Token;
 
 use Laminas\Http\Response as HTTPResponse;
@@ -181,8 +179,11 @@ abstract class AbstractToken implements TokenInterface
 
     /**
      * Generic accessor to enable access as public properties.
+     *
+     * @param string $key
+     * @return mixed|null
      */
-    public function __get(string $key): mixed
+    public function __get($key)
     {
         return $this->getParam($key);
     }
@@ -248,7 +249,7 @@ abstract class AbstractToken implements TokenInterface
      *
      * @return array
      */
-    public function __sleep(): array
+    public function __sleep()
     {
         return ['_params'];
     }

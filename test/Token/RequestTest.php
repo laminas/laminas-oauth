@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace LaminasTest\OAuth\Token;
 
 use Laminas\Http\Response as HTTPResponse;
