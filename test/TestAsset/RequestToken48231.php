@@ -11,7 +11,7 @@ class RequestToken48231 extends RequestToken
     {
     }
 
-    public function execute(array $params = null)
+    public function execute(?array $params = null)
     {
         $return = new Request();
         return $return;
