@@ -13,6 +13,10 @@ class AccessToken48231 extends AccessToken
     {
     }
 
+    /**
+     * @param array|null $params
+     * @return Access
+     */
     public function execute(?array $params = null)
     {
         return new Access();

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserAuthorizationTest extends TestCase
 {
+    /** @var Consumer34879  */
     protected $stubConsumer;
 
     public function setup(): void

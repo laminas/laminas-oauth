@@ -13,7 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 class AccessTokenTest extends TestCase
 {
+    /** @var Consumer39745  */
     protected $stubConsumer;
+
+    /** @var HTTPUtility39745  */
     protected $stubHttpUtility;
 
     public function setup(): void

@@ -14,16 +14,25 @@ class HTTPUtility90244 extends Utility
     {
     }
 
-    public function generateNonce()
+    public function generateNonce(): string
     {
         return md5('1234567890');
     }
 
-    public function generateTimestamp()
+    public function generateTimestamp(): string
     {
         return '12345678901';
     }
 
+    /**
+     * @param array $params
+     * @param string $signatureMethod
+     * @param string $consumerSecret
+     * @param string $accessTokenSecret
+     * @param string $method
+     * @param string $url
+     * @return string
+     */
     public function sign(
         array $params,
         $signatureMethod,

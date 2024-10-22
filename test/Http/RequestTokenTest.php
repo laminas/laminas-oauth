@@ -14,8 +14,13 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTokenTest extends TestCase
 {
+    /** @var Consumer32874  */
     protected $stubConsumer;
+
+    /** @var Consumer32874b  */
     protected $stubConsumer2;
+
+    /** @var HTTPUtility32874  */
     protected $stubHttpUtility;
 
     public function setup(): void
