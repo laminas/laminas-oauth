@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\TestAsset;
 
 use Laminas\OAuth\Http\AccessToken;
@@ -13,8 +15,7 @@ class AccessToken48231 extends AccessToken
 
     public function execute(?array $params = null)
     {
-        $return = new Access();
-        return $return;
+        return new Access();
     }
 
     public function setParams(array $customServiceParameters)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\TestAsset;
 
 use Laminas\OAuth\Consumer;
@@ -28,7 +30,6 @@ class Consumer39745 extends Consumer
 
     public function getLastRequestToken()
     {
-        $return = new RequestToken39745();
-        return $return;
+        return new RequestToken39745();
     }
 }

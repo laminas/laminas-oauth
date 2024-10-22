@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\Http;
 
 use Laminas\OAuth\Http;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class UserAuthorizationTest extends TestCase
 {
-    protected $stubConsumer = null;
+    protected $stubConsumer;
 
     public function setup(): void
     {
@@ -23,17 +25,17 @@ class UserAuthorizationTest extends TestCase
 
     public function testConstructorSetsCustomServiceParameters()
     {
-        $redirect = new Http\UserAuthorization($this->stubConsumer, [1,2,3]);
-        $this->assertEquals([1,2,3], $redirect->getParameters());
+        $redirect = new Http\UserAuthorization($this->stubConsumer, [1, 2, 3]);
+        $this->assertEquals([1, 2, 3], $redirect->getParameters());
     }
 
     public function testAssembleParametersReturnsUserAuthorizationParamArray()
     {
         $redirect = new Http\UserAuthorization($this->stubConsumer, ['foo ' => 'bar~']);
         $expected = [
-            'oauth_token' => '1234567890',
+            'oauth_token'    => '1234567890',
             'oauth_callback' => 'http://www.example.com/local',
-            'foo ' => 'bar~'
+            'foo '           => 'bar~',
         ];
         $this->assertEquals($expected, $redirect->assembleParams());
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\Config;
 
 use Laminas\OAuth\Config\StandardConfig;
@@ -11,7 +13,7 @@ class StandardConfigurationTest extends TestCase
     {
         $config = new StandardConfig(
             [
-                'siteUrl'   => 'https://example.com/oauth/'
+                'siteUrl' => 'https://example.com/oauth/',
             ]
         );
         $this->assertEquals('https://example.com/oauth/authorize', $config->getAuthorizeUrl());

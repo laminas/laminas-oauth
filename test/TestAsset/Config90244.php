@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\TestAsset;
 
 use Laminas\OAuth\Config\StandardConfig;

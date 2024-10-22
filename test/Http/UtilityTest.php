@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\Http;
 
 use Laminas\OAuth\Http;
 use PHPUnit\Framework\TestCase;
+
+use function chr;
 
 class UtilityTest extends TestCase
 {

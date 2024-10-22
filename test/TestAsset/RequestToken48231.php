@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\TestAsset;
 
 use Laminas\OAuth\Http\RequestToken;
@@ -13,8 +15,7 @@ class RequestToken48231 extends RequestToken
 
     public function execute(?array $params = null)
     {
-        $return = new Request();
-        return $return;
+        return new Request();
     }
 
     public function setParams(array $customServiceParameters)

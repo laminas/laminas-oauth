@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\Token;
 
 use Laminas\Http\Response as HTTPResponse;
@@ -13,14 +15,14 @@ class AccessTest extends TestCase
     public function testConstructorSetsResponseObject()
     {
         $response = new HTTPResponse(200, []);
-        $token = new AccessToken($response);
-        $this->assertInstanceOf('Laminas\\Http\\Response', $token->getResponse());
+        $token    = new AccessToken($response);
+        $this->assertInstanceOf(HTTPResponse::class, $token->getResponse());
     }
 
     public function testConstructorParsesRequestTokenFromResponseBody()
     {
-        $body   = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
-        $response = new HTTPResponse;
+        $body     = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
+        $response = new HTTPResponse();
         $response->setContent($body)
                  ->setStatusCode(200);
 
@@ -30,8 +32,8 @@ class AccessTest extends TestCase
 
     public function testConstructorParsesRequestTokenSecretFromResponseBody()
     {
-        $body = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
-        $response = new HTTPResponse;
+        $body     = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
+        $response = new HTTPResponse();
         $response->setContent($body)
                  ->setStatusCode(200);
 
@@ -41,8 +43,8 @@ class AccessTest extends TestCase
 
     public function testPropertyAccessWorks()
     {
-        $body = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri&foo=bar';
-        $response = new HTTPResponse;
+        $body     = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri&foo=bar';
+        $response = new HTTPResponse();
         $response->setContent($body)
                  ->setStatusCode(200);
 
@@ -52,7 +54,7 @@ class AccessTest extends TestCase
 
     public function testTokenCastsToEncodedResponseBody()
     {
-        $body = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
+        $body  = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
         $token = new AccessToken();
         $token->setToken('jZaee4GF52O3lUb9');
         $token->setTokenSecret('J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri');
@@ -61,7 +63,7 @@ class AccessTest extends TestCase
 
     public function testToStringReturnsEncodedResponseBody()
     {
-        $body = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
+        $body  = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
         $token = new AccessToken();
         $token->setToken('jZaee4GF52O3lUb9');
         $token->setTokenSecret('J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri');
@@ -70,8 +72,8 @@ class AccessTest extends TestCase
 
     public function testIsValidDetectsBadResponse()
     {
-        $body = 'oauthtoken=jZaee4GF52O3lUb9&oauthtokensecret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
-        $response = new HTTPResponse;
+        $body     = 'oauthtoken=jZaee4GF52O3lUb9&oauthtokensecret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
+        $response = new HTTPResponse();
         $response->setContent($body)
                  ->setStatusCode(200);
 
@@ -81,8 +83,8 @@ class AccessTest extends TestCase
 
     public function testIsValidDetectsGoodResponse()
     {
-        $body = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
-        $response = new HTTPResponse;
+        $body     = 'oauth_token=jZaee4GF52O3lUb9&oauth_token_secret=J4Ms4n8sxjYc0A8K0KOQFCTL0EwUQTri';
+        $response = new HTTPResponse();
         $response->setContent($body)
                  ->setStatusCode(200);
 

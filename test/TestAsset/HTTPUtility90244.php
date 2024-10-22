@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LaminasTest\OAuth\TestAsset;
 
 use Laminas\OAuth\Http\Utility;
+
+use function md5;
 
 class HTTPUtility90244 extends Utility
 {
