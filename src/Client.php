@@ -200,7 +200,7 @@ class Client extends HttpClient
                 $requestHeaders->addHeaders(['Authorization' => $oauthHeaderValue]);
                 break;
             case OAuth::REQUEST_SCHEME_POSTBODY:
-                if ($this->getMethod() === HttpRequest::METHOD_GET) {
+                if ($this->oauthConfig->getRequestMethod() === HttpRequest::METHOD_GET) {
                     throw new Exception\RuntimeException(
                         'The client is configured to'
                             . ' pass OAuth parameters through a POST body but request method'
