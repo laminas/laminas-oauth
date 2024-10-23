@@ -5,18 +5,19 @@ namespace Laminas\OAuth\Token;
 use Laminas\Http\Response as HTTPResponse;
 use Laminas\OAuth\Http\Utility as HTTPUtility;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function count;
+use function explode;
+use function rawurldecode;
+use function trim;
+
 abstract class AbstractToken implements TokenInterface
 {
     /**@+
      * Token constants
      */
-    const TOKEN_PARAM_KEY                = 'oauth_token';
-    const TOKEN_SECRET_PARAM_KEY         = 'oauth_token_secret';
-    const TOKEN_PARAM_CALLBACK_CONFIRMED = 'oauth_callback_confirmed';
+    public const TOKEN_PARAM_KEY                = 'oauth_token';
+    public const TOKEN_SECRET_PARAM_KEY         = 'oauth_token_secret';
+    public const TOKEN_PARAM_CALLBACK_CONFIRMED = 'oauth_callback_confirmed';
     /**@-*/
 
     /**
@@ -29,29 +30,25 @@ abstract class AbstractToken implements TokenInterface
     /**
      * OAuth response object
      *
-     * @var \Laminas\Http\Response
+     * @var HTTPResponse
      */
-    protected $response = null;
+    protected $response;
 
-    /**
-     * @var \Laminas\OAuth\Http\Utility
-     */
-    protected $httpUtility = null;
+    /** @var HTTPUtility */
+    protected $httpUtility;
 
     /**
      * Constructor; basic setup for any Token subclass.
      *
-     * @param  null|\Laminas\Http\Response $response
-     * @param  null|\Laminas\OAuth\Http\Utility $utility
      * @return void
      */
     public function __construct(
-        HTTPResponse $response = null,
-        HTTPUtility $utility = null
+        ?HTTPResponse $response = null,
+        ?HTTPUtility $utility = null
     ) {
         if ($response !== null) {
             $this->response = $response;
-            $params = $this->parseParameters($response);
+            $params         = $this->parseParameters($response);
             if (count($params) > 0) {
                 $this->setParams($params);
             }
@@ -59,7 +56,7 @@ abstract class AbstractToken implements TokenInterface
         if ($utility !== null) {
             $this->httpUtility = $utility;
         } else {
-            $this->httpUtility = new HTTPUtility;
+            $this->httpUtility = new HTTPUtility();
         }
     }
 
@@ -71,7 +68,8 @@ abstract class AbstractToken implements TokenInterface
      */
     public function isValid()
     {
-        if (isset($this->params[self::TOKEN_PARAM_KEY])
+        if (
+            isset($this->params[self::TOKEN_PARAM_KEY])
             && ! empty($this->params[self::TOKEN_PARAM_KEY])
             && isset($this->params[self::TOKEN_SECRET_PARAM_KEY])
         ) {
@@ -83,7 +81,7 @@ abstract class AbstractToken implements TokenInterface
     /**
      * Return the HTTP response object used to initialise this instance.
      *
-     * @return \Laminas\Http\Response
+     * @return HTTPResponse
      */
     public function getResponse()
     {
@@ -95,7 +93,7 @@ abstract class AbstractToken implements TokenInterface
      * requests with this Token.
      *
      * @param  string $secret
-     * @return \Laminas\OAuth\Token\AbstractToken
+     * @return AbstractToken
      */
     public function setTokenSecret($secret)
     {
@@ -120,7 +118,7 @@ abstract class AbstractToken implements TokenInterface
      *
      * @param  string $key
      * @param  string $value
-     * @return \Laminas\OAuth\Token\AbstractToken
+     * @return AbstractToken
      */
     public function setParam($key, $value)
     {
@@ -133,7 +131,7 @@ abstract class AbstractToken implements TokenInterface
      * a simple filter to remove any trailing newlines.
      *
      * @param  array $params
-     * @return \Laminas\OAuth\Token\AbstractToken
+     * @return AbstractToken
      */
     public function setParams(array $params)
     {
@@ -161,7 +159,7 @@ abstract class AbstractToken implements TokenInterface
      * Sets the value for a Token.
      *
      * @param  string $token
-     * @return \Laminas\OAuth\Token\AbstractToken
+     * @return AbstractToken
      */
     public function setToken($token)
     {
@@ -182,7 +180,8 @@ abstract class AbstractToken implements TokenInterface
     /**
      * Generic accessor to enable access as public properties.
      *
-     * @return string
+     * @param string $key
+     * @return mixed|null
      */
     public function __get($key)
     {
@@ -226,7 +225,6 @@ abstract class AbstractToken implements TokenInterface
      * Parse a HTTP response body and collect returned parameters
      * as raw url decoded key-value pairs in an associative array.
      *
-     * @param  \Laminas\Http\Response $response
      * @return array
      */
     protected function parseParameters(HTTPResponse $response)
@@ -240,7 +238,7 @@ abstract class AbstractToken implements TokenInterface
         // validate body based on acceptable characters...todo
         $parts = explode('&', $body);
         foreach ($parts as $kvpair) {
-            $pair = explode('=', $kvpair);
+            $pair                           = explode('=', $kvpair);
             $params[rawurldecode($pair[0])] = rawurldecode($pair[1]);
         }
         return $params;
@@ -248,6 +246,8 @@ abstract class AbstractToken implements TokenInterface
 
     /**
      * Limit serialisation stored data to the parameters
+     *
+     * @return array
      */
     public function __sleep()
     {
@@ -260,7 +260,7 @@ abstract class AbstractToken implements TokenInterface
     public function __wakeup()
     {
         if ($this->httpUtility === null) {
-            $this->httpUtility = new HTTPUtility;
+            $this->httpUtility = new HTTPUtility();
         }
     }
 }

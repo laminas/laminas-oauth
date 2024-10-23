@@ -3,34 +3,34 @@
 namespace Laminas\OAuth\Http;
 
 use Laminas\Http;
+use Laminas\Http\Client;
 use Laminas\OAuth\Http as HTTPClient;
 use Laminas\OAuth\OAuth;
 use Laminas\OAuth\Token;
+use Laminas\OAuth\Token\Access;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function array_merge;
+use function preg_match;
+
 class AccessToken extends HTTPClient
 {
     /**
      * Singleton instance if required of the HTTP client
      *
-     * @var \Laminas\Http\Client
+     * @var Client
      */
-    protected $httpClient = null;
+    protected $httpClient;
 
     /**
      * Initiate a HTTP request to retrieve an Access Token.
      *
-     * @return \Laminas\OAuth\Token\Access
+     * @return Access
      */
     public function execute()
     {
         $params   = $this->assembleParams();
         $response = $this->startRequestCycle($params);
-        $return   = new Token\Access($response);
-        return $return;
+        return new Token\Access($response);
     }
 
     /**

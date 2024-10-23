@@ -3,11 +3,9 @@
 namespace Laminas\OAuth\Token;
 
 use Laminas\Http\Response as HTTPResponse;
-use Laminas\OAuth\Http\Utility as HTTPUtility;
 
 interface TokenInterface
 {
-
     /**
      * Retrieve an arbitrary named parameter from the token
      *

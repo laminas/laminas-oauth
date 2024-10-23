@@ -4,27 +4,23 @@ namespace Laminas\OAuth;
 
 use Laminas\Http\Client as HTTPClient;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
 class OAuth
 {
-    const REQUEST_SCHEME_HEADER      = 'header';
-    const REQUEST_SCHEME_POSTBODY    = 'postbody';
-    const REQUEST_SCHEME_QUERYSTRING = 'querystring';
-    const GET                        = 'GET';
-    const POST                       = 'POST';
-    const PUT                        = 'PUT';
-    const DELETE                     = 'DELETE';
-    const HEAD                       = 'HEAD';
+    public const REQUEST_SCHEME_HEADER      = 'header';
+    public const REQUEST_SCHEME_POSTBODY    = 'postbody';
+    public const REQUEST_SCHEME_QUERYSTRING = 'querystring';
+    public const GET                        = 'GET';
+    public const POST                       = 'POST';
+    public const PUT                        = 'PUT';
+    public const DELETE                     = 'DELETE';
+    public const HEAD                       = 'HEAD';
 
     /**
      * Singleton instance if required of the HTTP client
      *
      * @var Laminas\Http\Client
      */
-    protected static $httpClient = null;
+    protected static $httpClient;
 
     /**
      * Allows the external environment to make Laminas_OAuth use a specific
@@ -48,7 +44,7 @@ class OAuth
     public static function getHttpClient()
     {
         if (! isset(self::$httpClient)) {
-            self::$httpClient = new HTTPClient;
+            self::$httpClient = new HTTPClient();
         } else {
             $request = self::$httpClient->getRequest();
             $headers = $request->getHeaders();

@@ -4,29 +4,25 @@ namespace Laminas\OAuth\Token;
 
 use Laminas\OAuth\Http;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function count;
+use function rawurldecode;
+
 class AuthorizedRequest extends AbstractToken
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $data = [];
 
     /**
      * Constructor
      *
      * @param  null|array $data
-     * @param  null|\Laminas\OAuth\Http\Utility $utility
      * @return void
      */
-    public function __construct(array $data = null, Http\Utility $utility = null)
+    public function __construct(?array $data = null, ?Http\Utility $utility = null)
     {
         if ($data !== null) {
             $this->data = $data;
-            $params = $this->parseData();
+            $params     = $this->parseData();
             if (count($params) > 0) {
                 $this->setParams($params);
             }
@@ -34,7 +30,7 @@ class AuthorizedRequest extends AbstractToken
         if ($utility !== null) {
             $this->httpUtility = $utility;
         } else {
-            $this->httpUtility = new Http\Utility;
+            $this->httpUtility = new Http\Utility();
         }
     }
 
@@ -55,7 +51,8 @@ class AuthorizedRequest extends AbstractToken
      */
     public function isValid()
     {
-        if (isset($this->params[self::TOKEN_PARAM_KEY])
+        if (
+            isset($this->params[self::TOKEN_PARAM_KEY])
             && ! empty($this->params[self::TOKEN_PARAM_KEY])
         ) {
             return true;

@@ -11,10 +11,12 @@ class RequestToken48231 extends RequestToken
     {
     }
 
-    public function execute(array $params = null)
+    /**
+     * @return Request
+     */
+    public function execute(?array $params = null)
     {
-        $return = new Request();
-        return $return;
+        return new Request();
     }
 
     public function setParams(array $customServiceParameters)

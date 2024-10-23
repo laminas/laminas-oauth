@@ -7,10 +7,8 @@ use Laminas\OAuth\Http as HTTPClient;
 use Laminas\OAuth\OAuth;
 use Laminas\OAuth\Token;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function array_merge;
+
 class RequestToken extends HTTPClient
 {
     /**
@@ -18,7 +16,7 @@ class RequestToken extends HTTPClient
      *
      * @var Http\Client
      */
-    protected $httpClient = null;
+    protected $httpClient;
 
     /**
      * Initiate a HTTP request to retrieve a Request Token.
@@ -29,8 +27,7 @@ class RequestToken extends HTTPClient
     {
         $params   = $this->assembleParams();
         $response = $this->startRequestCycle($params);
-        $return   = new Token\Request($response);
-        return $return;
+        return new Token\Request($response);
     }
 
     /**

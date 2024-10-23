@@ -6,29 +6,28 @@ use Laminas\OAuth\Consumer;
 
 class Consumer39745 extends Consumer
 {
-    public function getConsumerKey()
+    public function getConsumerKey(): string
     {
         return '1234567890';
     }
 
-    public function getSignatureMethod()
+    public function getSignatureMethod(): string
     {
         return 'HMAC-SHA1';
     }
 
-    public function getVersion()
+    public function getVersion(): string
     {
         return '1.0';
     }
 
-    public function getAccessTokenUrl()
+    public function getAccessTokenUrl(): string
     {
         return 'http://www.example.com/access';
     }
 
-    public function getLastRequestToken()
+    public function getLastRequestToken(): RequestToken39745
     {
-        $return = new RequestToken39745();
-        return $return;
+        return new RequestToken39745();
     }
 }

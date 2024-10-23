@@ -6,32 +6,39 @@ use Laminas\OAuth\Exception;
 use Laminas\OAuth\Http\Utility as HTTPUtility;
 use Laminas\Uri;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function implode;
+use function in_array;
+use function is_array;
+use function natsort;
+use function strtoupper;
+use function uksort;
+
 abstract class AbstractSignature implements SignatureInterface
 {
     /**
      * Hash algorithm to use when generating signature
+     *
      * @var string
      */
-    protected $hashAlgorithm = null;
+    protected $hashAlgorithm;
 
     /**
      * Key to use when signing
+     *
      * @var string
      */
-    protected $key = null;
+    protected $key;
 
     /**
      * Consumer secret
+     *
      * @var string
      */
-    protected $consumerSecret = null;
+    protected $consumerSecret;
 
     /**
      * Token secret
+     *
      * @var string
      */
     protected $tokenSecret = '';
@@ -67,9 +74,9 @@ abstract class AbstractSignature implements SignatureInterface
     {
         $uri = Uri\UriFactory::factory($url);
         $uri->normalize();
-        if ($uri->getScheme() == 'http' && $uri->getPort() == '80') {
+        if ($uri->getScheme() === 'http' && (int) $uri->getPort() === 80) {
             $uri->setPort('');
-        } elseif ($uri->getScheme() == 'https' && $uri->getPort() == '443') {
+        } elseif ($uri->getScheme() === 'https' && (int) $uri->getPort() === 443) {
             $uri->setPort('');
         } elseif (! in_array($uri->getScheme(), ['http', 'https'])) {
             throw new Exception\InvalidArgumentException('Invalid URL provided; must be an HTTP or HTTPS scheme');

@@ -11,7 +11,7 @@ class StandardConfigurationTest extends TestCase
     {
         $config = new StandardConfig(
             [
-                'siteUrl'   => 'https://example.com/oauth/'
+                'siteUrl' => 'https://example.com/oauth/',
             ]
         );
         $this->assertEquals('https://example.com/oauth/authorize', $config->getAuthorizeUrl());

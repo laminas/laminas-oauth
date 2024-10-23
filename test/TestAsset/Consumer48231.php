@@ -15,7 +15,7 @@ class Consumer48231 extends Consumer
         parent::__construct($options);
     }
 
-    public function getCallbackUrl()
+    public function getCallbackUrl(): string
     {
         return 'http://www.example.com/local';
     }

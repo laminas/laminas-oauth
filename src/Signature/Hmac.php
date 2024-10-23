@@ -4,10 +4,8 @@ namespace Laminas\OAuth\Signature;
 
 use Laminas\Crypt\Hmac as HMACEncryption;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function base64_encode;
+
 class Hmac extends AbstractSignature
 {
     /**

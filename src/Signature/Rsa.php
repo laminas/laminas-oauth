@@ -5,10 +5,6 @@ namespace Laminas\OAuth\Signature;
 use Laminas\Crypt\PublicKey\Rsa as RsaEnc;
 use Laminas\Crypt\PublicKey\RsaOptions as RsaEncOptions;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
 class Rsa extends AbstractSignature
 {
     /**
@@ -23,7 +19,7 @@ class Rsa extends AbstractSignature
     {
         $rsa = new RsaEnc(new RsaEncOptions([
             'hash_algorithm' => $this->hashAlgorithm,
-            'binary_output'   => true
+            'binary_output'  => true,
         ]));
 
         return $rsa->sign($this->getBaseSignatureString($params, $method, $url), $this->key);

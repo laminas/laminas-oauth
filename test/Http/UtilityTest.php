@@ -5,10 +5,11 @@ namespace LaminasTest\OAuth\Http;
 use Laminas\OAuth\Http;
 use PHPUnit\Framework\TestCase;
 
+use function chr;
+
 class UtilityTest extends TestCase
 {
-    // see: http://wiki.oauth.net/TestCases (Parameter Encoding Tests)
-
+    /** see: http://wiki.oauth.net/TestCases (Parameter Encoding Tests) */
     public function testUrlEncodeCorrectlyEncodesAlnum()
     {
         $string = 'abcABC123';

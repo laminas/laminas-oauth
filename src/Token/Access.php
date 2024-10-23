@@ -6,18 +6,16 @@ use Laminas\OAuth\Client;
 use Laminas\OAuth\Config\ConfigInterface as Config;
 use Laminas\OAuth\Exception;
 use Laminas\Uri;
+use Traversable;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function in_array;
+
 class Access extends AbstractToken
 {
     /**
      * Cast to HTTP header
      *
      * @param  string $url
-     * @param  Config $config
      * @param  null|array $customParams
      * @param  null|string $realm
      * @return string
@@ -26,11 +24,12 @@ class Access extends AbstractToken
     public function toHeader(
         $url,
         Config $config,
-        array $customParams = null,
+        ?array $customParams = null,
         $realm = null
     ) {
         $uri = Uri\UriFactory::factory($url);
-        if (! $uri->isValid()
+        if (
+            ! $uri->isValid()
             || ! in_array($uri->getScheme(), ['http', 'https'])
         ) {
             throw new Exception\InvalidArgumentException(
@@ -50,10 +49,11 @@ class Access extends AbstractToken
      * @return string
      * @throws Exception\InvalidArgumentException
      */
-    public function toQueryString($url, Config $config, array $params = null)
+    public function toQueryString($url, Config $config, ?array $params = null)
     {
         $uri = Uri\UriFactory::factory($url);
-        if (! $uri->isValid()
+        if (
+            ! $uri->isValid()
             || ! in_array($uri->getScheme(), ['http', 'https'])
         ) {
             throw new Exception\InvalidArgumentException(
@@ -69,7 +69,7 @@ class Access extends AbstractToken
      *
      * @param  array $oauthOptions
      * @param  null|string $uri
-     * @param  null|array|\Traversable $config
+     * @param null|array|Traversable $config
      * @param  bool $excludeCustomParamsFromHeader
      * @return Client
      */

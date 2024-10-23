@@ -2,10 +2,19 @@
 
 namespace Laminas\OAuth;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use Laminas\Http\Client;
+use Laminas\Http\Client\Exception\ExceptionInterface;
+use Laminas\Http\Response;
+use Laminas\OAuth\Consumer;
+use Laminas\OAuth\Http\Utility;
+
+use function implode;
+use function in_array;
+use function preg_match;
+use function sprintf;
+
+use const PHP_EOL;
+
 class Http
 {
     /**
@@ -21,7 +30,7 @@ class Http
      *
      * @var Consumer
      */
-    protected $consumer = null;
+    protected $consumer;
 
     /**
      * OAuth specifies three request methods, this holds the current preferred
@@ -30,7 +39,7 @@ class Http
      *
      * @var string
      */
-    protected $preferredRequestScheme = null;
+    protected $preferredRequestScheme;
 
     /**
      * Request Method for the HTTP Request.
@@ -42,24 +51,22 @@ class Http
     /**
      * Instance of the general Laminas\OAuth\Http\Utility class.
      *
-     * @var \Laminas\OAuth\Http\Utility
+     * @var Utility
      */
-    protected $httpUtility = null;
+    protected $httpUtility;
 
     /**
      * Constructor
      *
-     * @param  \Laminas\OAuth\Consumer $consumer
      * @param  null|array $parameters
-     * @param  null|\Laminas\OAuth\Http\Utility $utility
      * @return void
      */
     public function __construct(
         Consumer $consumer,
-        array $parameters = null,
-        Http\Utility $utility = null
+        ?array $parameters = null,
+        ?Http\Utility $utility = null
     ) {
-        $this->consumer = $consumer;
+        $this->consumer               = $consumer;
         $this->preferredRequestScheme = $this->consumer->getRequestScheme();
         if ($parameters !== null) {
             $this->setParameters($parameters);
@@ -67,7 +74,7 @@ class Http
         if ($utility !== null) {
             $this->httpUtility = $utility;
         } else {
-            $this->httpUtility = new Http\Utility;
+            $this->httpUtility = new Utility();
         }
     }
 
@@ -138,8 +145,8 @@ class Http
      *
      * @todo   Remove cycling?; Replace with upfront do-or-die configuration
      * @param  array $params
-     * @return \Laminas\Http\Response
-     * @throws Exception\InvalidArgumentException on HTTP request errors
+     * @return Response
+     * @throws Exception\InvalidArgumentException On HTTP request errors.
      */
     public function startRequestCycle(array $params)
     {
@@ -148,7 +155,7 @@ class Http
         $status   = null;
         try {
             $response = $this->attemptRequest($params);
-        } catch (\Laminas\Http\Client\Exception\ExceptionInterface $e) {
+        } catch (ExceptionInterface $e) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Error in HTTP request: %s',
                 $e->getMessage()
@@ -158,10 +165,11 @@ class Http
             $body   = $response->getBody();
             $status = $response->getStatusCode();
         }
-        if ($response === null // Request failure/exception
-            || $status == 500  // Internal Server Error
-            || $status == 400  // Bad Request
-            || $status == 401  // Unauthorized
+        if (
+            $response === null // Request failure/exception
+            || $status === 500  // Internal Server Error
+            || $status === 400  // Bad Request
+            || $status === 401  // Unauthorized
             || empty($body)    // Missing token
         ) {
             $this->assessRequestAttempt($response);
@@ -176,7 +184,7 @@ class Http
      *
      * @param array $params
      * @param string $url
-     * @return \Laminas\Http\Client
+     * @return Client
      */
     public function getRequestSchemeQueryStringClient(array $params, $url)
     {
@@ -193,11 +201,11 @@ class Http
      * Manages the switch from OAuth request scheme to another lower preference
      * scheme during a request cycle.
      *
-     * @param  Laminas\Http\Response
+     * @param Laminas\Http\Response $response
      * @return void
-     * @throws Exception\RuntimeException if unable to retrieve valid token response
+     * @throws Exception\RuntimeException If unable to retrieve valid token response.
      */
-    protected function assessRequestAttempt(\Laminas\Http\Response $response = null)
+    protected function assessRequestAttempt(?Response $response = null)
     {
         switch ($this->preferredRequestScheme) {
             case OAuth::REQUEST_SCHEME_HEADER:
@@ -226,15 +234,15 @@ class Http
      */
     protected function toAuthorizationHeader(array $params, $realm = null)
     {
-        $headerValue = [];
+        $headerValue   = [];
         $headerValue[] = 'OAuth realm="' . $realm . '"';
         foreach ($params as $key => $value) {
             if (! preg_match("/^oauth_/", $key)) {
                 continue;
             }
-            $headerValue[] = Http\Utility::urlEncode($key)
+            $headerValue[] = Utility::urlEncode($key)
                            . '="'
-                           . Http\Utility::urlEncode($value)
+                           . Utility::urlEncode($value)
                            . '"';
         }
         return implode(",", $headerValue);
@@ -245,7 +253,7 @@ class Http
      * return the resulting HTTP Response.
      *
      * @param  array $params
-     * @return \Laminas\Http\Response
+     * @return Response
      */
     protected function attemptRequest(array $params)
     {

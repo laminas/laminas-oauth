@@ -2,35 +2,43 @@
 
 namespace Laminas\OAuth;
 
+use Laminas\OAuth\Config;
+use Laminas\OAuth\Http\AccessToken;
+use Laminas\OAuth\Token\Access;
+use Laminas\OAuth\Token\Request;
 use Laminas\Stdlib\ArrayUtils;
 use Traversable;
 
-/**
- * @category   Laminas
- * @package    Laminas_OAuth
- */
+use function array_merge;
+use function call_user_func_array;
+use function header;
+use function method_exists;
+
 class Consumer extends OAuth
 {
+    /**
+     * replace later when this works
+     *
+     * @var bool
+     */
     public $switcheroo = false; // replace later when this works
 
     /**
      * Request Token retrieved from OAuth Provider
      *
-     * @var \Laminas\OAuth\Token\Request
+     * @var Request
      */
-    protected $requestToken = null;
+    protected $requestToken;
 
     /**
      * Access token retrieved from OAuth Provider
      *
-     * @var \Laminas\OAuth\Token\Access
+     * @var Access
      */
-    protected $accessToken = null;
+    protected $accessToken;
 
-    /**
-     * @var \Laminas\OAuth\Config
-     */
-    protected $config = null;
+    /** @var Config */
+    protected $config;
 
     /**
      * Constructor; create a new object with an optional array|Laminas_Config
@@ -40,7 +48,7 @@ class Consumer extends OAuth
      */
     public function __construct($options = null)
     {
-        $this->config = new Config\StandardConfig;
+        $this->config = new Config\StandardConfig();
         if ($options !== null) {
             if ($options instanceof Traversable) {
                 $options = ArrayUtils::iteratorToArray($options);
@@ -60,9 +68,9 @@ class Consumer extends OAuth
      * @return Laminas\OAuth\Token\Request
      */
     public function getRequestToken(
-        array $customServiceParameters = null,
+        ?array $customServiceParameters = null,
         $httpMethod = null,
-        Http\RequestToken $request = null
+        ?Http\RequestToken $request = null
     ) {
         if ($request === null) {
             $request = new Http\RequestToken($this, $customServiceParameters);
@@ -93,9 +101,9 @@ class Consumer extends OAuth
      * @return string
      */
     public function getRedirectUrl(
-        array $customServiceParameters = null,
-        Token\Request $token = null,
-        Http\UserAuthorization $redirect = null
+        ?array $customServiceParameters = null,
+        ?Token\Request $token = null,
+        ?Http\UserAuthorization $redirect = null
     ) {
         if ($redirect === null) {
             $redirect = new Http\UserAuthorization($this, $customServiceParameters);
@@ -119,8 +127,8 @@ class Consumer extends OAuth
      * @return void
      */
     public function redirect(
-        array $customServiceParameters = null,
-        Http\UserAuthorization $request = null
+        ?array $customServiceParameters = null,
+        ?Http\UserAuthorization $request = null
     ) {
         $redirectUrl = $this->getRedirectUrl($customServiceParameters, $request);
         header('Location: ' . $redirectUrl);
@@ -131,20 +139,19 @@ class Consumer extends OAuth
      * Retrieve an Access Token in exchange for a previously received/authorized
      * Request Token.
      *
-     * @param  array $queryData GET data returned in user's redirect from Provider
-     * @param  \Laminas\OAuth\Token\Request Request Token information
-     * @param  string $httpMethod
-     * @param  \Laminas\OAuth\Http\AccessToken $request
-     * @return \Laminas\OAuth\Token\Access
-     * @throws Exception\InvalidArgumentException on invalid authorization
+     * @param array $queryData GET data returned in user's redirect from Provider
+     * @param Request $token Request Token information
+     * @param string $httpMethod
+     * @return Access
+     * @throws Exception\InvalidArgumentException On invalid authorization
      *     token, non-matching response authorization token, or unprovided
-     *     authorization token
+     *     authorization token.
      */
     public function getAccessToken(
         $queryData,
-        Token\Request $token,
+        Request $token,
         $httpMethod = null,
-        Http\AccessToken $request = null
+        ?Http\AccessToken $request = null
     ) {
         $authorizedToken = new Token\AuthorizedRequest($queryData);
         if (! $authorizedToken->isValid()) {
@@ -153,13 +160,13 @@ class Consumer extends OAuth
             );
         }
         if ($request === null) {
-            $request = new Http\AccessToken($this);
+            $request = new AccessToken($this);
         }
 
         // OAuth 1.0a Verifier
         if ($authorizedToken->getParam('oauth_verifier') !== null) {
             $params = array_merge($request->getParameters(), [
-                'oauth_verifier' => $authorizedToken->getParam('oauth_verifier')
+                'oauth_verifier' => $authorizedToken->getParam('oauth_verifier'),
             ]);
             $request->setParameters($params);
         }
@@ -179,7 +186,7 @@ class Consumer extends OAuth
             throw new Exception\InvalidArgumentException('Request token must be passed to method');
         }
         $this->requestToken = $token;
-        $this->accessToken = $request->execute();
+        $this->accessToken  = $request->execute();
         return $this->accessToken;
     }
 
@@ -187,7 +194,7 @@ class Consumer extends OAuth
      * Return whatever the last Request Token retrieved was while using the
      * current Consumer instance.
      *
-     * @return \Laminas\OAuth\Token\Request
+     * @return Request
      */
     public function getLastRequestToken()
     {
@@ -198,7 +205,7 @@ class Consumer extends OAuth
      * Return whatever the last Access Token retrieved was while using the
      * current Consumer instance.
      *
-     * @return \Laminas\OAuth\Token\Access
+     * @return Access
      */
     public function getLastAccessToken()
     {
@@ -208,7 +215,7 @@ class Consumer extends OAuth
     /**
      * Alias to self::getLastAccessToken()
      *
-     * @return \Laminas\OAuth\Token\Access
+     * @return Access
      */
     public function getToken()
     {
@@ -223,12 +230,12 @@ class Consumer extends OAuth
      * @param  string $method
      * @param  array $args
      * @return mixed
-     * @throws Exception\BadMethodCallException if method does not exist in config object
+     * @throws Exception\BadMethodCallException If method does not exist in config object.
      */
     public function __call($method, array $args)
     {
         if (! method_exists($this->config, $method)) {
-            throw new Exception\BadMethodCallException('Method does not exist: '.$method);
+            throw new Exception\BadMethodCallException('Method does not exist: ' . $method);
         }
         return call_user_func_array([$this->config, $method], $args);
     }
