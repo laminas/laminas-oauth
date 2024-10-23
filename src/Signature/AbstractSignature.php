@@ -74,9 +74,9 @@ abstract class AbstractSignature implements SignatureInterface
     {
         $uri = Uri\UriFactory::factory($url);
         $uri->normalize();
-        if ($uri->getScheme() === 'http' && (string) $uri->getPort() === '80') {
+        if ($uri->getScheme() === 'http' && (int) $uri->getPort() === 80) {
             $uri->setPort('');
-        } elseif ($uri->getScheme() === 'https' && (string) $uri->getPort() === '443') {
+        } elseif ($uri->getScheme() === 'https' && (int) $uri->getPort() === 443) {
             $uri->setPort('');
         } elseif (! in_array($uri->getScheme(), ['http', 'https'])) {
             throw new Exception\InvalidArgumentException('Invalid URL provided; must be an HTTP or HTTPS scheme');
